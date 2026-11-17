@@ -1,0 +1,19 @@
+# ccmtc-guides — 本機獨立測試用 Compose（http://localhost:3100/drone/）
+# 正式部署是把 guides 服務併入 NAS 上 ccmtc-official 的 docker-compose.yml，
+# 只 expose 80、不對外開埠，一律經 ccmtc-portal 的 rewrite 進來。
+
+services:
+  guides:
+    image: nginx:alpine
+    container_name: ccmtc-guides
+    restart: unless-stopped
+    ports:
+      - "3100:80"
+    volumes:
+      - ./site:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

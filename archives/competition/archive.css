@@ -1,0 +1,7 @@
+/* 封存樣式（capture_competition.py 產生） */
+body::before{content:"📦 本賽事已於 2026 年 6 月結束，此頁為封存資料（唯讀）。成績與名單以封存當時為準。";
+  display:block;padding:10px 16px;background:#334155;color:#f8fafc;font:600 14px/1.6 system-ui,"Noto Sans TC",sans-serif;
+  text-align:center;letter-spacing:.02em}
+/* 封存後不提供任何寫入操作 */
+.draw-btn,.reset-draw-btn{display:none!important}
+a[href$="/competition/referee"],a[href$="/competition/admin"]{display:none!important}

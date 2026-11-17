@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>屏東無人機競賽｜程控無人機公版程式 操作與調參指南</title>
+  <style>
+    :root {
+      --bg: #f4f6f9; --card: #ffffff; --ink: #1a2230; --muted: #5a6577; --line: #d8e0ea;
+      --primary: #1e5eff; --primary-soft: #e8f0fe; --accent: #e67e00; --accent-soft: #fff3e0;
+      --ok: #15803d; --ok-soft: #dcfce7; --danger: #d92d20; --danger-soft: #fee4e2;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+      font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65; font-size: 15px; overflow-x: hidden; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 24px 16px 56px; display: flex; flex-direction: column; gap: 24px; }
+    header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 24px 20px;
+      border-radius: 14px; box-shadow: 0 8px 24px rgba(15,23,42,.14); }
+    header .badge { display: inline-block; background: rgba(56,189,248,.2); border: 1px solid rgba(56,189,248,.45);
+      color: #7dd3fc; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+    header h1 { margin: 0 0 8px; font-size: clamp(20px, 3.2vw, 30px); line-height: 1.3; }
+    header p { margin: 0; color: #cbd5e1; max-width: 86ch; font-size: 14px; }
+    header a { color: #7dd3fc; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .pill { background: rgba(255,255,255,.1); padding: 5px 10px; border-radius: 8px; font-size: 13px; color: #f8fafc; }
+    .pill b { color: #38bdf8; }
+    section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 16px;
+      box-shadow: 0 2px 8px rgba(15,23,42,.03); }
+    h2 { margin: 0 0 14px; font-size: 19px; border-bottom: 2px solid var(--line); padding-bottom: 10px; }
+    h3 { margin: 18px 0 8px; font-size: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+    @media (max-width: 880px) { .grid-2 { grid-template-columns: 1fr; } }
+    .sim-box { background: #1e293b; color: #f8fafc; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+    .mb-frame { background: #0f172a; border: 3px solid #475569; border-radius: 14px; padding: 14px; text-align: center; }
+    .mb-title { font-size: 11px; color: #94a3b8; letter-spacing: .08em; margin-bottom: 8px; }
+    .led { display: grid; grid-template-columns: repeat(5, 22px); gap: 7px; justify-content: center; margin: 0 auto; }
+    .led span { width: 22px; height: 22px; border-radius: 4px; background: #2b1416; transition: background .1s, box-shadow .1s; }
+    .led span.on { background: #ff3b30; box-shadow: 0 0 10px rgba(255,59,48,.85); }
+    .btn-group-title { font-size: 12.5px; color: #94a3b8; font-weight: 600; margin-bottom: 6px; }
+    .sim-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+    button.sim-btn { font-family: inherit; font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 7px;
+      border: 1px solid #475569; background: #334155; color: #f8fafc; cursor: pointer; }
+    button.sim-btn:hover { background: #475569; }
+    button.sim-btn.a { background: #1d4ed8; border-color: #3b82f6; }
+    button.sim-btn.b { background: #b45309; border-color: #f59e0b; }
+    button.sim-btn.ab { background: #b91c1c; border-color: #ef4444; }
+    .sim-status { background: #0f172a; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #cbd5e1; min-height: 64px; }
+    .sim-status b { color: #7dd3fc; }
+    .param-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .param-grid label { font-size: 12.5px; color: var(--muted); display: flex; flex-direction: column; gap: 3px; }
+    .param-grid input, .param-grid select { font-family: inherit; font-size: 14px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; }
+    .field-svg { width: 100%; height: auto; background: #f8fbff; border: 1px solid var(--line); border-radius: 10px; display: block; }
+    .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+    .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 4px; }
+    .result { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+    .tag.ok { background: var(--ok-soft); color: var(--ok); }
+    .tag.bad { background: var(--danger-soft); color: var(--danger); }
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 560px; }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #f1f5fb; font-weight: 700; }
+    td code, p code, li code { background: #eef2f7; padding: 1px 6px; border-radius: 5px; font-size: 13px; }
+    .note { background: var(--accent-soft); border-left: 4px solid var(--accent); padding: 10px 14px; border-radius: 6px; margin: 12px 0; font-size: 14px; }
+    .note.blue { background: var(--primary-soft); border-left-color: var(--primary); }
+    .note.red { background: var(--danger-soft); border-left-color: var(--danger); }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 14px; }
+    .flow span { background: var(--primary-soft); color: var(--primary); padding: 5px 10px; border-radius: 8px; font-weight: 600; }
+    .flow em { color: var(--muted); font-style: normal; }
+    ol.check li, ul.tight li { margin-bottom: 4px; }
+    .urlbox { font-family: "JetBrains Mono", "Courier New", monospace; background: #0f172a; color: #7dd3fc; padding: 10px 14px; border-radius: 8px; word-break: break-all; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+    .urlbox button { font-family: inherit; background: #334155; color: #fff; border: 1px solid #475569; border-radius: 6px; padding: 4px 10px; cursor: pointer; flex-shrink: 0; }
+    .param-viz { position: sticky; top: 0; z-index: 3; background: var(--card); padding: 6px 0 10px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+    .param-hint { font-size: 14px; margin-top: 8px; padding: 8px 12px; border-radius: 8px; background: var(--accent-soft); color: #7c4a03; min-height: 40px; }
+    .param-hint b { color: #b45309; }
+    table.ptable { table-layout: fixed; }
+    table.ptable tr[data-p] { cursor: pointer; transition: background .12s; }
+    table.ptable tr[data-p]:hover { background: #f8fafc; }
+    table.ptable tr.sel { background: #fff3e0; }
+    table.ptable tr.sel td:first-child { box-shadow: inset 4px 0 0 var(--accent); }
+    footer { text-align: center; color: var(--muted); font-size: 12.5px; }
+  </style>
+</head>
+<body>
+<!-- guides:backbar -->
+<nav class="guides-backbar" style="max-width:1160px;margin:0 auto;padding:12px 16px 0;font-size:14px">
+  <a href="/contests" style="color:inherit;opacity:.75;text-decoration:none">← 競賽專區</a>
+  <span style="opacity:.4">｜</span>
+  <a href="/" style="color:inherit;opacity:.75;text-decoration:none">車城自造教育科技中心</a>
+</nav>
+<!-- /guides:backbar -->
+<div class="container">
+
+  <header>
+    <span class="badge">車城科技中心｜程控無人機</span>
+    <h1>屏東無人機競賽｜Gigo Drone 公版程式 操作與調參指南</h1>
+    <p>依簡章 8.「無人機程控任務賽」規則撰寫：依序降落 A → B → C 圓環、穿越兩道立式穿環、最後停在終點區。程式檔：<code style="background:rgba(255,255,255,.12);color:#fff">屏東無人機競賽_公版.hex</code>（拖進 makecode.microbit.org 即以積木開啟）。</p>
+    <div class="pill-row">
+      <div class="pill">賽道總長 <b>900 cm</b></div>
+      <div class="pill">每段中心距 <b>200 cm</b></div>
+      <div class="pill">起飛預設高度 <b>120 cm</b></div>
+      <div class="pill">理想滿分 <b>95 分</b></div>
+      <div class="pill">每回合 <b>3–5 分鐘</b></div>
+    </div>
+  </header>
+
+  <!-- 一、模擬器 -->
+  <section>
+    <h2>一、互動式 micro:bit 按鍵與飛行模擬器</h2>
+    <div class="grid-2">
+      <div class="sim-box">
+        <div class="mb-frame">
+          <div class="mb-title">micro:bit LED</div>
+          <div class="led" id="led"></div>
+        </div>
+        <div>
+          <div class="btn-group-title">按鍵（和實機相同）</div>
+          <div class="sim-buttons">
+            <button class="sim-btn a" id="btnA">A 開始任務</button>
+            <button class="sim-btn b" id="btnB">B 切換起飛位置</button>
+            <button class="sim-btn ab" id="btnAB">A+B 緊急降落</button>
+            <button class="sim-btn" id="btnLogo">摸 logo 看電壓</button>
+          </div>
+        </div>
+        <div class="sim-status" id="status">目前起飛位置：<b>S 出發區</b>。按 <b>A</b> 開始模擬。</div>
+      </div>
+
+      <div>
+        <div class="param-grid">
+          <label>第1段高度（出發→A，穿環一）<input type="number" id="h1" value="70" min="0" max="100"></label>
+          <label>第2段高度（A→B）<input type="number" id="h2" value="60" min="0" max="100"></label>
+          <label>第3段高度（B→C）<input type="number" id="h3" value="60" min="0" max="100"></label>
+          <label>第4段高度（C→終點，穿環二）<input type="number" id="h4" value="50" min="0" max="100"></label>
+          <label>結束位置<select id="endPos"><option value="4" selected>4＝終點區</option><option value="3">3＝C</option><option value="2">2＝B</option><option value="1">1＝A</option></select></label>
+          <label>模擬速度<select id="speed"><option value="1">一般</option><option value="2.5" selected>快</option><option value="5">很快</option></select></label>
+        </div>
+        <svg class="field-svg" id="field" viewBox="-32 -165 952 215" style="margin-top:12px"></svg>
+        <div class="legend">
+          <span><i style="background:#93c5fd"></i>出發／終點區</span>
+          <span><i style="background:#fca5a5"></i>圓環目標 A／B／C</span>
+          <span><i style="background:#facc15"></i>立式穿環（側視，內徑 60 cm）</span>
+          <span><i style="background:#16a34a"></i>無人機飛行軌跡</span>
+        </div>
+        <div class="result" id="result"></div>
+        <div class="note blue">側視圖：橫軸是賽道長度、縱軸是高度（cm）。穿環一約在 140 cm、穿環二約在 760 cm。模擬器假設無人機每段都飛得剛好，實際落點要靠試飛調整。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 二、規則與路線 -->
+  <section>
+    <h2>二、比賽規則重點與飛行路線</h2>
+    <div class="table-wrap"><table>
+      <tr><th style="width:150px">項目</th><th>規則（簡章 8.1、8.5）</th><th style="width:210px">程式怎麼做</th></tr>
+      <tr><td>圓環降落</td><td>沿路徑方向依序降落在 A、B、C 圓環，分數看落點，取最佳。A：10/8/6/4/2；B：20/16/12/8/4；C：30/24/18/12/6</td><td>每一段飛完都<b>降落</b>，停 2 秒再起飛</td></tr>
+      <tr><td>立式穿環</td><td>兩道高低不同的穿環，每道 10 分。穿環一在起飛區與 A 之間，穿環二在 C 與終點區之間</td><td>第 1 段飛 70 cm、第 4 段飛 50 cm，對準圓心</td></tr>
+      <tr><td>終點區</td><td>完整停在圖內 15 分</td><td>第 4 段結束降落在終點區中心</td></tr>
+      <tr><td>臨時停放區</td><td>每次無人機降落點都可視為臨時停放區；可重複解題，分數累進</td><td>按 B 選起飛位置，從失敗那關接著飛</td></tr>
+      <tr><td>名次比序</td><td>終點區 → C 圓環 → 穿環 → B 圓環 → A 圓環</td><td>C 環與終點區最重要，優先調準</td></tr>
+    </table></div>
+
+    <h3>每一段的動作順序</h3>
+    <div class="flow">
+      <span>起飛（倒數 3-2-1）</span><em>→</em>
+      <span>升到 120 cm</span><em>→</em>
+      <span>降到這段高度並確認</span><em>→</em>
+      <span>往前 200 cm（一次飛完）</span><em>→</em>
+      <span>降落</span><em>→</em>
+      <span>LED 顯示到達位置</span>
+    </div>
+    <div class="table-wrap" style="margin-top:12px"><table>
+      <tr><th>段</th><th>從 → 到</th><th>飛行高度</th><th>途中障礙</th><th>降落得分</th></tr>
+      <tr><td>第 1 段</td><td>出發區 S → A</td><td>70 cm</td><td>穿環一（較高，圓心 70，可過 40～100），離起飛點約 90 cm</td><td>穿環 10 分＋A 環 2～10 分</td></tr>
+      <tr><td>第 2 段</td><td>A → B</td><td>60 cm</td><td>—</td><td>B 環 4～20 分</td></tr>
+      <tr><td>第 3 段</td><td>B → C</td><td>60 cm</td><td>—</td><td>C 環 6～30 分</td></tr>
+      <tr><td>第 4 段</td><td>C → 終點區 E</td><td>50 cm</td><td>穿環二（較低，圓心 50，可過 20～80）</td><td>穿環 10 分＋終點區 15 分</td></tr>
+    </table></div>
+  </section>
+
+  <!-- 三、按鍵 -->
+  <section>
+    <h2>三、按鍵與 LED 顯示對照</h2>
+    <div class="table-wrap"><table>
+      <tr><th style="width:150px">操作</th><th>功能</th><th>LED 顯示</th></tr>
+      <tr><td><b>按 B</b></td><td>切換起飛位置（飛行中無效）</td><td>S → A → B → C → S…</td></tr>
+      <tr><td><b>按 A</b></td><td>開始任務：先檢查電壓，再從起飛位置一段一段飛到結束位置</td><td>起飛倒數 3、2、1；每次降落後顯示 A／B／C／E；完成顯示 ✔</td></tr>
+      <tr><td><b>按 A+B</b></td><td>緊急降落並停止任務</td><td>✘</td></tr>
+      <tr><td><b>摸 logo</b>（V2）</td><td>顯示電池電壓</td><td>捲動電壓數字</td></tr>
+      <tr><td>電壓不足</td><td>低於「最低電壓」不起飛</td><td>哭臉 → 電壓 → ✘</td></tr>
+    </table></div>
+    <div class="note">從中途重飛：把無人機放回<b>最後成功降落的圓環中心</b>、機頭朝終點區，按 B 切到該位置（例如「B」），再按 A，就會接著飛 B → C → 終點。</div>
+  </section>
+
+  <!-- 四、參數 -->
+  <section>
+    <h2>四、可調整參數速查表（積木最上方的「設定變數」）</h2>
+    <div class="param-viz">
+      <svg class="field-svg" id="paramField" viewBox="-32 -165 952 215"></svg>
+      <div class="param-hint" id="paramHint">👆 點下方表格中的任一個參數，圖上會用<b>橘色</b>標出它影響的段落或位置。</div>
+    </div>
+    <div class="table-wrap"><table class="ptable">
+      <colgroup><col style="width:17%"><col style="width:9%"><col style="width:37%"><col style="width:37%"></colgroup>
+      <tr><th>參數名稱</th><th>預設值</th><th>用途</th><th>什麼時候調</th></tr>
+      <tr data-p="第1段高度"><td><code>第1段高度</code></td><td>70</td><td>出發區 → A，穿過第一道環（圓心 70）</td><td>撞到環的上緣就調低、下緣就調高</td></tr>
+      <tr data-p="第2段高度"><td><code>第2段高度</code></td><td>60</td><td>A → B 的飛行高度（cm）</td><td>一般不用改</td></tr>
+      <tr data-p="第3段高度"><td><code>第3段高度</code></td><td>60</td><td>B → C 的飛行高度</td><td>一般不用改</td></tr>
+      <tr data-p="第4段高度"><td><code>第4段高度</code></td><td>50</td><td>C → 終點，穿過第二道環（圓心 50）</td><td>撞到環的上緣就調低、下緣就調高</td></tr>
+      <tr data-p="每段距離"><td><code>每段距離</code></td><td>200</td><td>每一段往前飛的距離（cm）</td><td>場地中心距若不是 200 才改</td></tr>
+      <tr data-p="距離校正"><td><code>距離校正</code></td><td>100</td><td>距離放大百分比</td><td>落點<b>還沒到</b>圓心 → 調大（105）；<b>超過</b> → 調小（95）</td></tr>
+      <tr data-p="左右修正"><td><code>左右修正</code></td><td>0</td><td>每段飛完往右（正）或往左（負）移幾 cm</td><td>每次都偏左 10 cm → 填 10；偏右 → 填 -10</td></tr>
+      <tr data-p="降落後等待時間"><td><code>降落後等待時間</code></td><td>2000</td><td>降落後停多久再起飛（毫秒）</td><td>讓裁判看清楚落點，可依現場調整</td></tr>
+      <tr data-p="結束位置"><td><code>結束位置</code></td><td>4</td><td>4＝終點區、3＝C、2＝B、1＝A</td><td>練習時只飛前幾段，省電池</td></tr>
+      <tr data-p="高度誤差"><td><code>高度誤差</code></td><td>8</td><td>高度和目標差多少以內算到位（cm）</td><td>常卡在等高度 → 調大</td></tr>
+      <tr data-p="高度確認次數"><td><code>高度確認次數</code></td><td>10</td><td>最多讀幾次高度（每次約 0.5 秒）</td><td>高度讀數不準時改 0（只靠等待）</td></tr>
+      <tr data-p="穩定等待時間"><td><code>穩定等待時間</code></td><td>800</td><td>每個動作之間的停頓（毫秒）</td><td>動作接太快會晃 → 調大</td></tr>
+      <tr data-p="最低電壓"><td><code>最低電壓</code></td><td>3.6</td><td>低於這個電壓不起飛（V）</td><td>依實測電池表現調整</td></tr>
+    </table></div>
+    <div class="note blue">「程式狀態」區的 <code>起飛位置</code>、<code>飛行中</code>、<code>緊急停止</code> 由程式自己管理，<b>不要改</b>。</div>
+  </section>
+
+  <!-- 五、程式架構 -->
+  <section>
+    <h2>五、程式架構（函式說明）</h2>
+    <div class="table-wrap"><table>
+      <tr><th style="width:150px">函式</th><th>做什麼</th></tr>
+      <tr><td><code>執行任務</code></td><td>檢查電壓 → 從「起飛位置＋1」那段開始，用迴圈一段一段呼叫「飛一段」直到「結束位置」</td></tr>
+      <tr><td><code>飛一段</code></td><td>起飛 → 升降到（這段高度）→ 往前飛（每段距離）→ 降落 → 顯示位置 → 等待</td></tr>
+      <tr><td><code>升降到</code></td><td>設定高度後，反覆讀高度感測器，直到誤差小於「高度誤差」或次數用完。避免還在 120 cm 往下降時就往前飛撞到環</td></tr>
+      <tr><td><code>往前飛</code></td><td>把距離乘上「距離校正」後一次往前飛完，最後做「左右修正」</td></tr>
+      <tr><td><code>段高度</code></td><td>輸入第幾段，回傳那一段的高度</td></tr>
+      <tr><td><code>顯示位置</code></td><td>0～4 對應 LED 顯示 S、A、B、C、E</td></tr>
+    </table></div>
+
+    <h3>開啟程式與擴展</h3>
+    <ol class="check">
+      <li>打開 <b>makecode.microbit.org</b>，把 <code>屏東無人機競賽_公版.hex</code> 拖進網頁，就會以積木開啟（擴展已內含）。</li>
+      <li>若學生從新專案自己拼：積木區點「<b>擴展</b>」→ 貼上下方網址搜尋 → 加入 Gigo Drone。</li>
+    </ol>
+    <div class="urlbox"><span id="url">https://github.com/gigotoys/GigoDrone</span><button id="copyUrl">複製</button></div>
+  </section>
+
+  <!-- 六、檢查清單 -->
+  <section>
+    <h2>六、上場前檢查清單與現場修正速查</h2>
+    <h3>上場前</h3>
+    <ol class="check">
+      <li><b>多準備幾顆充飽的電池</b>：一顆約可飛 6～7 分鐘、充電要 1.5 小時，兩次比賽之間直接換電池。</li>
+      <li>摸 logo 看電壓，要高於「最低電壓」。</li>
+      <li>micro:bit 與無人機連線（P13／P14）接好；<b>沒接好時程式會一直等回覆而停住</b>。</li>
+      <li>看一下地墊：無人機靠拍攝地面來定位，<b>亮面反光或燈光直射的地面容易飄</b>，練習時間先觀察落點穩不穩。</li>
+      <li>確認場地淨高：每段都會先升到 120 cm，天花板建議 1.6 m 以上。</li>
+      <li>LED 顯示 <b>S</b>（出發區），無人機放在出發區中心、<b>機頭朝終點區</b>（電源燈在正後方）。</li>
+      <li>操作的人站在無人機<b>後方約 2 公尺</b>；A+B 緊急降落要等目前的動作做完才會生效。</li>
+    </ol>
+    <h3>現場修正速查</h3>
+    <div class="table-wrap"><table>
+      <tr><th style="width:230px">看到的狀況</th><th>改哪個參數</th></tr>
+      <tr><td>每次都降在圓心<b>前面</b>（不夠遠）</td><td><code>距離校正</code> 調大，例如 100 → 105</td></tr>
+      <tr><td>每次都降在圓心<b>後面</b>（太遠）</td><td><code>距離校正</code> 調小，例如 100 → 95</td></tr>
+      <tr><td>每次都偏左 / 偏右</td><td><code>左右修正</code> 填正數往右、負數往左</td></tr>
+      <tr><td>撞到穿環上緣 / 下緣</td><td>該段高度調低 / 調高 5～10 cm</td></tr>
+      <tr><td>穿環時突然往上跳</td><td>該段高度調低 5～10 cm，讓上方多留空間</td></tr>
+      <tr><td>落點忽前忽後、不固定</td><td>先不要改參數，檢查地面是否反光、燈光是否直射；換電池再試</td></tr>
+      <tr><td>起飛後停很久才往前</td><td><code>高度誤差</code> 調大，或 <code>高度確認次數</code> 調小</td></tr>
+      <tr><td>前進時晃動、落點不穩</td><td><code>穩定等待時間</code> 調大，讓起飛後先停穩再前進</td></tr>
+      <tr><td>B 之後失敗</td><td>放回 B 中心 → 按 B 選「B」→ 按 A 接著飛</td></tr>
+    </table></div>
+    <div class="note red">只在一次試飛看到偏差就改參數很容易越調越亂。同一個設定至少飛 2～3 次，看到<b>固定方向</b>的偏差再改。</div>
+  </section>
+
+  <!-- guides:downloads -->
+  <section id="downloads">
+    <h2>檔案下載</h2>
+    <table>
+      <tr><th>檔案</th><th>說明</th><th style="width:90px">大小</th></tr>
+      <tr><td><a href="downloads/drone-public.hex" download="屏東無人機競賽_公版.hex">公版程式（積木 .hex）</a></td><td>拖進 makecode.microbit.org 即以積木開啟，擴展已內含。</td><td style="white-space:nowrap">1.3 MB</td></tr>
+      <tr><td><a href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">公版程式（JavaScript 原始碼 .ts）</a></td><td>MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</td><td style="white-space:nowrap">4.6 KB</td></tr>
+      <tr><td><a href="downloads/brochure.pdf" download="2026屏東縣無人機競賽活動簡章.pdf">活動簡章（PDF）</a></td><td>比賽規則以簡章為準。</td><td style="white-space:nowrap">415.3 KB</td></tr>
+      <tr><td><a href="downloads/field-map.jpg" download="屏東無人機競賽_最終確認比賽場地圖.jpg">最終確認比賽場地圖（JPG）</a></td><td>主辦單位最終確認版場地圖。</td><td style="white-space:nowrap">595.3 KB</td></tr>
+    </table>
+  </section>
+<!-- /guides:downloads -->
+
+  <footer>車城科技中心｜屏東無人機競賽 Gigo Drone 公版程式說明</footer>
+</div>
+
+<script>
+(function () {
+  // ---------- LED ----------
+  const FONT = {
+    S: ["01111","10000","01110","00001","11110"],
+    A: ["01110","10001","11111","10001","10001"],
+    B: ["11110","10001","11110","10001","11110"],
+    C: ["01111","10000","10000","10000","01111"],
+    E: ["11111","10000","11110","10000","11111"],
+    "3": ["11110","00001","00110","00001","11110"],
+    "2": ["11100","00010","00100","01000","11111"],
+    "1": ["00100","01100","00100","00100","01110"],
+    YES: ["00000","00001","00010","10100","01000"],
+    NO: ["10001","01010","00100","01010","10001"],
+    SAD: ["00000","01010","00000","01110","10001"],
+    OFF: ["00000","00000","00000","00000","00000"]
+  };
+  const ledEl = document.getElementById("led");
+  const cells = [];
+  for (let i = 0; i < 25; i++) { const s = document.createElement("span"); ledEl.appendChild(s); cells.push(s); }
+  function show(key) {
+    const g = FONT[key] || FONT.OFF;
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) cells[r * 5 + c].classList.toggle("on", g[r][c] === "1");
+  }
+  const POS_KEY = ["S", "A", "B", "C", "E"];
+  const POS_NAME = ["S 出發區", "A 圓環", "B 圓環", "C 圓環", "E 終點區"];
+
+  // ---------- 場地 ----------
+  const CENTER = [50, 250, 450, 650, 850];
+  const ZONES = [[0,100,"#93c5fd","出發區"],[180,320,"#fca5a5","A"],[380,520,"#fca5a5","B"],[580,720,"#fca5a5","C"],[800,900,"#93c5fd","終點區"]];
+  const RINGS = [{ x: 140, c: 70, seg: 1, name: "穿環一" }, { x: 760, c: 50, seg: 4, name: "穿環二" }];
+  const RING_R = 30, DRONE_HALF = 4;
+  const svg = document.getElementById("field");
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; svg.appendChild(e); return e; }
+  // 高度格線
+  [0, 50, 100, 120, 150].forEach(h => {
+    el("line", { x1: 0, x2: 900, y1: -h, y2: -h, stroke: h === 120 ? "#f59e0b" : "#e2e8f0", "stroke-width": h === 120 ? 1.5 : 1, "stroke-dasharray": h === 120 ? "6 4" : "" });
+    el("text", { x: -6, y: -h + 4, "font-size": 10, "text-anchor": "end", fill: "#64748b" }, h);
+  });
+  el("text", { x: 896, y: -124, "font-size": 10, "text-anchor": "end", fill: "#b45309" }, "起飛預設高度 120 cm");
+  ZONES.forEach(z => {
+    el("rect", { x: z[0], y: 0, width: z[1] - z[0], height: 8, fill: z[2], rx: 2 });
+    el("text", { x: (z[0] + z[1]) / 2, y: 24, "font-size": 12, "text-anchor": "middle", fill: "#334155", "font-weight": 700 }, z[3]);
+  });
+  el("line", { x1: 0, x2: 900, y1: 0, y2: 0, stroke: "#475569", "stroke-width": 1.5 });
+  for (let x = 0; x <= 900; x += 100) el("text", { x: x, y: 40, "font-size": 9, "text-anchor": "middle", fill: "#94a3b8" }, x);
+  RINGS.forEach(r => {
+    el("line", { x1: r.x - 8, x2: r.x - 8, y1: 0, y2: -(r.c - RING_R), stroke: "#94a3b8", "stroke-width": 2 });
+    el("line", { x1: r.x + 8, x2: r.x + 8, y1: 0, y2: -(r.c - RING_R), stroke: "#94a3b8", "stroke-width": 2 });
+    el("rect", { x: r.x - 3, y: -(r.c + RING_R), width: 6, height: RING_R * 2, fill: "none", stroke: "#eab308", "stroke-width": 3, rx: 3 });
+    el("text", { x: r.x, y: -(r.c + RING_R) - 6, "font-size": 10, "text-anchor": "middle", fill: "#a16207" }, r.name + " 圓心 " + r.c);
+  });
+  const trail = el("polyline", { points: "", fill: "none", stroke: "#16a34a", "stroke-width": 2 });
+  const drone = document.createElementNS(NS, "g");
+  drone.innerHTML = '<rect x="-14" y="-4" width="28" height="8" rx="3" fill="#0f172a"/><rect x="-18" y="-7" width="10" height="2.5" rx="1" fill="#38bdf8"/><rect x="8" y="-7" width="10" height="2.5" rx="1" fill="#38bdf8"/>';
+  svg.appendChild(drone);
+  let pts = [];
+  function place(x, h, addTrail) {
+    drone.setAttribute("transform", "translate(" + x + "," + (-h - 4) + ")");
+    if (addTrail) { pts.push(x + "," + (-h)); trail.setAttribute("points", pts.join(" ")); }
+  }
+
+  // ---------- 狀態 ----------
+  let startPos = 0, running = false, abort = false, droneX = CENTER[0], droneH = 0;
+  const statusEl = document.getElementById("status"), resultEl = document.getElementById("result");
+  function status(html) { statusEl.innerHTML = html; }
+  function val(id) { return Number(document.getElementById(id).value); }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms / val("speed"))); }
+  function tween(x1, h1, ms) {
+    const x0 = droneX, h0 = droneH, dur = ms / val("speed");
+    return new Promise(res => {
+      const t0 = performance.now();
+      function step(t) {
+        if (abort && h1 > 0) { res(); return; }
+        const k = Math.min(1, (t - t0) / dur);
+        droneX = x0 + (x1 - x0) * k; droneH = h0 + (h1 - h0) * k;
+        place(droneX, droneH, true);
+        if (k < 1) requestAnimationFrame(step); else res();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  function reset() { pts = []; trail.setAttribute("points", ""); droneX = CENTER[startPos]; droneH = 0; place(droneX, 0, false); }
+  reset(); show("S");
+
+  function ringOK(r, h) { return Math.abs(h - r.c) <= RING_R - DRONE_HALF; }
+  function segH(n) { return Math.max(0, Math.min(100, val("h" + n))); }
+
+  async function flyLeg(n) {
+    for (const k of ["3", "2", "1"]) { if (abort) return; show(k); status("第 " + n + " 段：起飛倒數 <b>" + k + "</b>"); await sleep(600); }
+    show("OFF");
+    status("第 " + n + " 段：起飛，升到預設高度 <b>120 cm</b>");
+    await tween(droneX, 120, 1200); if (abort) return;
+    const h = segH(n);
+    status("第 " + n + " 段：<b>升降到 " + h + " cm</b>，讀高度感測器確認到位");
+    await tween(droneX, h, 1000); await sleep(400); if (abort) return;
+    status("第 " + n + " 段：往前飛 <b>200 cm</b>（一次飛完）");
+    await tween(droneX + 200, h, 2000); if (abort) return;
+    status("第 " + n + " 段：降落在 <b>" + POS_NAME[n] + "</b>");
+    await tween(droneX, 0, 900);
+    show(POS_KEY[n]); await sleep(1000);
+  }
+
+  async function mission() {
+    running = true; abort = false; resultEl.innerHTML = ""; reset();
+    status("檢查電壓：<b>3.9 V</b> ≥ 最低電壓 3.6 V，可以起飛");
+    await sleep(800);
+    const end = val("endPos");
+    const tags = []; let score = 0;
+    for (let n = startPos + 1; n <= end && !abort; n++) {
+      await flyLeg(n);
+      if (abort) break;
+      RINGS.filter(r => r.seg === n).forEach(r => {
+        const ok = ringOK(r, segH(n));
+        tags.push('<span class="tag ' + (ok ? "ok" : "bad") + '">' + r.name + (ok ? " 通過 +10" : " 撞環（高度 " + segH(n) + "，可過 " + (r.c - RING_R + DRONE_HALF) + "～" + (r.c + RING_R - DRONE_HALF) + "）") + "</span>");
+        if (ok) score += 10;
+      });
+      const best = [0, 10, 20, 30, 15][n];
+      tags.push('<span class="tag">' + POS_NAME[n] + " 最高 +" + best + "</span>");
+      score += best;
+    }
+    if (abort) { show("NO"); status("<b>緊急降落</b>，任務停止。按 B 選位置後可重新開始。"); }
+    else { show("YES"); status("任務完成 ✔ 這次從 <b>" + POS_NAME[startPos] + "</b> 飛到 <b>" + POS_NAME[end] + "</b>"); tags.push('<span class="tag ok">理想得分（落在圓心）：' + score + " 分</span>"); }
+    resultEl.innerHTML = tags.join("");
+    running = false;
+  }
+
+  document.getElementById("btnA").onclick = () => { if (!running) mission(); };
+  document.getElementById("btnB").onclick = () => {
+    if (running) return;
+    startPos = (startPos + 1) % 4; reset(); show(POS_KEY[startPos]); resultEl.innerHTML = "";
+    status("目前起飛位置：<b>" + POS_NAME[startPos] + "</b>。把無人機放在這裡的中心、機頭朝終點區，按 <b>A</b> 開始。");
+  };
+  document.getElementById("btnAB").onclick = async () => {
+    if (!running) return;
+    abort = true; show("NO");
+    await tween(droneX, 0, 800);
+  };
+  document.getElementById("btnLogo").onclick = () => { if (!running) status("電池電壓：<b>3.9 V</b>（示意值，實機會顯示真實電壓）"); };
+  document.getElementById("copyUrl").onclick = () => {
+    const t = document.getElementById("url").textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { document.getElementById("copyUrl").textContent = "已複製"; }).catch(() => {});
+  };
+})();
+</script>
+
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("paramField");
+  const C = [50, 250, 450, 650, 850];
+  const H = [0, 70, 60, 60, 50];
+  const RINGS = [{ x: 140, c: 70, seg: 1 }, { x: 760, c: 50, seg: 4 }];
+  const ZONES = [[0,100,"#93c5fd","出發區"],[180,320,"#fca5a5","A"],[380,520,"#fca5a5","B"],[580,720,"#fca5a5","C"],[800,900,"#93c5fd","終點區"]];
+  const OR = "#f97316";
+  function el(tag, a, text, parent) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (text != null) e.textContent = text; (parent || svg).appendChild(e); return e; }
+  // 底圖
+  [0, 50, 100, 120, 150].forEach(h => {
+    el("line", { x1: 0, x2: 900, y1: -h, y2: -h, stroke: h === 120 ? "#f59e0b" : "#e2e8f0", "stroke-dasharray": h === 120 ? "6 4" : "" });
+    el("text", { x: -6, y: -h + 4, "font-size": 10, "text-anchor": "end", fill: "#64748b" }, h);
+  });
+  ZONES.forEach(z => {
+    el("rect", { x: z[0], y: 0, width: z[1] - z[0], height: 8, fill: z[2], rx: 2 });
+    el("text", { x: (z[0] + z[1]) / 2, y: 24, "font-size": 12, "text-anchor": "middle", fill: "#334155", "font-weight": 700 }, z[3]);
+  });
+  el("line", { x1: 0, x2: 900, y1: 0, y2: 0, stroke: "#475569", "stroke-width": 1.5 });
+  RINGS.forEach(r => {
+    el("line", { x1: r.x - 8, x2: r.x - 8, y1: 0, y2: -(r.c - 30), stroke: "#94a3b8", "stroke-width": 2 });
+    el("line", { x1: r.x + 8, x2: r.x + 8, y1: 0, y2: -(r.c - 30), stroke: "#94a3b8", "stroke-width": 2 });
+    el("rect", { x: r.x - 3, y: -(r.c + 30), width: 6, height: 60, fill: "none", stroke: "#eab308", "stroke-width": 3, rx: 3 });
+  });
+  // 預設飛行路線（灰色）
+  const OFF = [0, 55, 0, 0, -55];
+  const grayLbl = [];
+  for (let n = 1; n <= 4; n++) {
+    const x0 = C[n - 1], x1 = C[n];
+    el("polyline", { points: [x0+",0", x0+",-120", x0+","+(-H[n]), x1+","+(-H[n]), x1+",0"].join(" "), fill: "none", stroke: "#94a3b8", "stroke-width": 1.5, "stroke-dasharray": "4 3" });
+    grayLbl[n] = el("text", { x: (x0 + x1) / 2 + OFF[n], y: -H[n] - 6, "font-size": 10, "text-anchor": "middle", fill: "#64748b" }, "第" + n + "段 " + H[n] + "cm");
+  }
+  const hl = el("g", {});
+  function clear() { while (hl.firstChild) hl.removeChild(hl.firstChild); grayLbl.forEach(t => t && t.setAttribute("opacity", 1)); }
+  const P = (tag, a, t) => el(tag, a, t, hl);
+  function segLine(n) {
+    P("rect", { x: C[n-1], y: -150, width: 200, height: 150, fill: OR, opacity: .08 });
+    P("line", { x1: C[n-1], x2: C[n], y1: -H[n], y2: -H[n], stroke: OR, "stroke-width": 5, "stroke-linecap": "round" });
+    grayLbl[n].setAttribute("opacity", 0);
+    P("text", { x: (C[n-1] + C[n]) / 2 + OFF[n], y: -H[n] - 8, "font-size": 12, "text-anchor": "middle", fill: "#c2410c", "font-weight": 700 }, "第" + n + "段 " + H[n] + " cm");
+    RINGS.filter(r => r.seg === n).forEach(r => P("rect", { x: r.x - 6, y: -(r.c + 33), width: 12, height: 66, fill: "none", stroke: OR, "stroke-width": 3, rx: 5 }));
+  }
+  function arrow(n, label) {
+    const y = -8 - (n % 2) * 0;
+    P("line", { x1: C[n-1] + 4, x2: C[n] - 4, y1: -138, y2: -138, stroke: OR, "stroke-width": 2.5, "marker-end": "url(#ah)", "marker-start": "url(#ah)" });
+    P("text", { x: (C[n-1] + C[n]) / 2, y: -143, "font-size": 11, "text-anchor": "middle", fill: "#c2410c", "font-weight": 700 }, label);
+    P("line", { x1: C[n-1], x2: C[n], y1: -H[n], y2: -H[n], stroke: OR, "stroke-width": 4 });
+  }
+  function dot(x, label) {
+    P("circle", { cx: x, cy: 0, r: 9, fill: OR, opacity: .9 });
+    if (label) P("text", { x: x, y: -14, "font-size": 11, "text-anchor": "middle", fill: "#c2410c", "font-weight": 700 }, label);
+  }
+  function vert(n) { P("line", { x1: C[n-1], x2: C[n-1], y1: -120, y2: -H[n], stroke: OR, "stroke-width": 5, "stroke-linecap": "round" }); }
+  const defs = el("defs", {});
+  const mk = el("marker", { id: "ah", viewBox: "0 0 10 10", refX: 5, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse" }, null, defs);
+  el("path", { d: "M0,0 L10,5 L0,10 z", fill: OR }, null, mk);
+
+  const ACT = {
+    "第1段高度": [() => segLine(1), "影響<b>第 1 段</b>（出發區 → A）的飛行高度，也就是穿過<b>穿環一</b>的高度。"],
+    "第2段高度": [() => segLine(2), "影響<b>第 2 段</b>（A → B）的飛行高度，這段沒有穿環。"],
+    "第3段高度": [() => segLine(3), "影響<b>第 3 段</b>（B → C）的飛行高度，這段沒有穿環。"],
+    "第4段高度": [() => segLine(4), "影響<b>第 4 段</b>（C → 終點區）的飛行高度，也就是穿過<b>穿環二</b>的高度。"],
+    "每段距離": [() => { for (let n = 1; n <= 4; n++) arrow(n, "200 cm"); }, "影響<b>四段</b>每一段往前飛的距離（場地中心距 200 cm）。"],
+    "距離校正": [() => { for (let n = 1; n <= 4; n++) arrow(n, "200 × 校正%"); [1,2,3,4].forEach(n => dot(C[n])); }, "影響<b>四段</b>的實際飛行距離，也就決定每次<b>降落點</b>是落在圓心前面還是後面。"],
+    "左右修正": [() => { [1,2,3,4].forEach(n => dot(C[n], "左右移")); }, "每一段飛完、<b>降落前</b>往左或往右移動。側視圖看不出左右，橘點標出修正發生的位置。"],
+    "降落後等待時間": [() => { [1,2,3].forEach(n => dot(C[n], "停 2 秒")); }, "在 <b>A、B、C</b> 降落後，停多久再起飛下一段。"],
+    "結束位置": [() => { dot(C[4], "4"); dot(C[3], "3"); dot(C[2], "2"); dot(C[1], "1"); P("rect", { x: 800, y: -150, width: 100, height: 150, fill: OR, opacity: .1 }); }, "決定飛到哪裡停止：<b>1＝A、2＝B、3＝C、4＝終點區</b>（預設 4）。"],
+    "高度誤差": [() => { for (let n = 1; n <= 4; n++) vert(n); }, "每段起飛後從 <b>120 cm 降到該段高度</b>時（橘色直線），高度差多少以內算到位。"],
+    "高度確認次數": [() => { for (let n = 1; n <= 4; n++) vert(n); }, "每段起飛後從 <b>120 cm 降到該段高度</b>時（橘色直線），最多讀幾次高度感測器。"],
+    "穩定等待時間": [() => { for (let n = 1; n <= 4; n++) { vert(n); P("circle", { cx: C[n-1], cy: -H[n], r: 6, fill: OR }); } }, "<b>每個動作之間</b>的停頓，例如起飛後、到達高度後、前進後，影響所有段落。"],
+    "最低電壓": [() => { dot(C[0], "起飛前檢查"); }, "按 A 之後、<b>第一次起飛前</b>檢查電壓，不夠就不起飛。"]
+  };
+  const hint = document.getElementById("paramHint");
+  document.querySelectorAll("table.ptable tr[data-p]").forEach(tr => {
+    tr.addEventListener("click", () => {
+      document.querySelectorAll("table.ptable tr.sel").forEach(r => r.classList.remove("sel"));
+      tr.classList.add("sel"); clear();
+      const a = ACT[tr.dataset.p];
+      if (a) { a[0](); hint.innerHTML = "<b>" + tr.dataset.p + "</b>：" + a[1]; }
+    });
+  });
+})();
+</script>
+</body>
+</html>

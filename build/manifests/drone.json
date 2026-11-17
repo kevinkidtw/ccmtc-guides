@@ -1,0 +1,36 @@
+{
+  "key": "drone",
+  "title": "屏東縣無人機競賽 公版程式說明站",
+  "source_root": "~/Documents/車城科技中心/115學年度競賽/無人機競賽",
+  "index": "02_公版程式/屏東無人機競賽_公版_操作與調參指南.html",
+  "downloads": [
+    {
+      "from": "02_公版程式/屏東無人機競賽_公版.hex",
+      "to": "drone-public.hex",
+      "name": "屏東無人機競賽_公版.hex",
+      "label": "公版程式（積木 .hex）",
+      "note": "拖進 makecode.microbit.org 即以積木開啟，擴展已內含。"
+    },
+    {
+      "from": "02_公版程式/屏東無人機競賽_公版.ts",
+      "to": "drone-public.ts",
+      "name": "屏東無人機競賽_公版.ts",
+      "label": "公版程式（JavaScript 原始碼 .ts）",
+      "note": "MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。"
+    },
+    {
+      "from": "01_簡章與場地/2026屏東縣無人機競賽活動簡章.pdf",
+      "to": "brochure.pdf",
+      "name": "2026屏東縣無人機競賽活動簡章.pdf",
+      "label": "活動簡章（PDF）",
+      "note": "比賽規則以簡章為準。"
+    },
+    {
+      "from": "01_簡章與場地/屏東無人機競賽_最終確認比賽場地圖.jpg",
+      "to": "field-map.jpg",
+      "name": "屏東無人機競賽_最終確認比賽場地圖.jpg",
+      "label": "最終確認比賽場地圖（JPG）",
+      "note": "主辦單位最終確認版場地圖。"
+    }
+  ]
+}

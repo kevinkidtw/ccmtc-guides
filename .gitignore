@@ -1,0 +1,9 @@
+.DS_Store
+.env
+site/.*.tmp/
+__pycache__/
+._*
+.env
+*.tgz
+__pycache__/
+site/competition/
