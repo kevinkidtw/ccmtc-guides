@@ -88,6 +88,7 @@
   <a href="/contests" style="color:inherit;opacity:.75;text-decoration:none">← 競賽專區</a>
   <span style="opacity:.4">｜</span>
   <a href="/" style="color:inherit;opacity:.75;text-decoration:none">車城自造教育科技中心</a>
+  <a href="#downloads" style="float:right;color:#1e5eff;font-weight:700;text-decoration:none">⬇ 檔案下載</a>
 </nav>
 <!-- /guides:backbar -->
 <div class="container">
@@ -270,15 +271,67 @@
   </section>
 
   <!-- guides:downloads -->
+
+<style>
+#downloads .dl-lead{margin:-4px 0 14px;color:var(--muted,#5a6577);font-size:14px}
+#downloads .dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+#downloads .dl-card{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line,#d8e0ea);border-radius:12px;
+  padding:16px;background:var(--card,#fff);box-shadow:0 1px 3px rgba(15,23,42,.04);transition:box-shadow .15s,transform .15s}
+#downloads .dl-card:hover{box-shadow:0 8px 20px rgba(15,23,42,.08);transform:translateY(-2px)}
+#downloads .dl-card.primary{grid-column:1/-1;border:2px solid var(--primary,#1e5eff);
+  background:linear-gradient(135deg,var(--primary-soft,#e8f0fe) 0%,var(--card,#fff) 70%)}
+#downloads .dl-head{display:flex;align-items:center;gap:12px}
+#downloads .dl-type{flex:0 0 auto;width:52px;height:52px;border-radius:10px;display:grid;place-items:center;
+  font:800 13px/1 ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.04em}
+#downloads .t-hex{background:var(--primary,#1e5eff);color:#fff}
+#downloads .t-ts{background:#ede9fe;color:#6d28d9}
+#downloads .t-pdf{background:var(--danger-soft,#fee4e2);color:var(--danger,#d92d20)}
+#downloads .t-jpg,#downloads .t-png{background:var(--ok-soft,#dcfce7);color:var(--ok,#15803d)}
+#downloads .t-other{background:#eef2f7;color:#334155}
+#downloads .dl-title{font-weight:800;font-size:16px;line-height:1.35}
+#downloads .dl-meta{font-size:12.5px;color:var(--muted,#5a6577);margin-top:2px}
+#downloads .dl-badge{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;
+  background:var(--accent,#e67e00);color:#fff;vertical-align:2px}
+#downloads .dl-note{margin:0;font-size:14px;color:var(--ink,#1a2230);flex:1}
+#downloads .dl-thumb{display:block;border-radius:8px;overflow:hidden;border:1px solid var(--line,#d8e0ea);aspect-ratio:16/9;background:#f1f5fb}
+#downloads .dl-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+#downloads .dl-actions{display:flex;flex-wrap:wrap;gap:8px}
+#downloads .dl-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-weight:700;font-size:14px;
+  text-decoration:none;border:1px solid var(--line,#d8e0ea);color:var(--ink,#1a2230);background:var(--card,#fff)}
+#downloads .dl-btn:hover{border-color:var(--primary,#1e5eff);color:var(--primary,#1e5eff)}
+#downloads .dl-btn.main{background:var(--primary,#1e5eff);border-color:var(--primary,#1e5eff);color:#fff}
+#downloads .dl-btn.main:hover{filter:brightness(1.08);color:#fff}
+@media (max-width:560px){#downloads .dl-grid{grid-template-columns:1fr}}
+</style>
   <section id="downloads">
     <h2>檔案下載</h2>
-    <table>
-      <tr><th>檔案</th><th>說明</th><th style="width:90px">大小</th></tr>
-      <tr><td><a href="downloads/drone-public.hex" download="屏東無人機競賽_公版.hex">公版程式（積木 .hex）</a></td><td>拖進 makecode.microbit.org 即以積木開啟，擴展已內含。</td><td style="white-space:nowrap">1.3 MB</td></tr>
-      <tr><td><a href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">公版程式（JavaScript 原始碼 .ts）</a></td><td>MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</td><td style="white-space:nowrap">4.6 KB</td></tr>
-      <tr><td><a href="downloads/brochure.pdf" download="2026屏東縣無人機競賽活動簡章.pdf">活動簡章（PDF）</a></td><td>比賽規則以簡章為準。</td><td style="white-space:nowrap">415.3 KB</td></tr>
-      <tr><td><a href="downloads/field-map.jpg" download="屏東無人機競賽_最終確認比賽場地圖.jpg">最終確認比賽場地圖（JPG）</a></td><td>主辦單位最終確認版場地圖。</td><td style="white-space:nowrap">595.3 KB</td></tr>
-    </table>
+    <p class="dl-lead">比賽程式、簡章與場地圖。手機點「下載」會存到檔案；「線上看」直接在瀏覽器開啟。</p>
+    <div class="dl-grid">
+    <div class="dl-card primary">
+      <div class="dl-head"><div class="dl-type t-hex">HEX</div><div><div class="dl-title">公版程式（積木 .hex）<span class="dl-badge">先下載這個</span></div><div class="dl-meta">屏東無人機競賽_公版.hex・1.3 MB</div></div></div>
+      
+      <p class="dl-note">拖進 makecode.microbit.org 即以積木開啟，擴展已內含。比賽用的就是這一支。</p>
+      <div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.hex" download="屏東無人機競賽_公版.hex">⬇ 下載</a></div>
+    </div>
+    <div class="dl-card">
+      <div class="dl-head"><div class="dl-type t-ts">TS</div><div><div class="dl-title">公版程式（JavaScript 原始碼 .ts）</div><div class="dl-meta">屏東無人機競賽_公版.ts・4.6 KB</div></div></div>
+      
+      <p class="dl-note">MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</p>
+      <div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">⬇ 下載</a></div>
+    </div>
+    <div class="dl-card">
+      <div class="dl-head"><div class="dl-type t-pdf">PDF</div><div><div class="dl-title">活動簡章（PDF）</div><div class="dl-meta">2026屏東縣無人機競賽活動簡章.pdf・415.3 KB</div></div></div>
+      
+      <p class="dl-note">比賽規則以簡章為準。</p>
+      <div class="dl-actions"><a class="dl-btn main" href="downloads/brochure.pdf" download="2026屏東縣無人機競賽活動簡章.pdf">⬇ 下載</a><a class="dl-btn" href="downloads/brochure.pdf" target="_blank" rel="noopener">線上看</a></div>
+    </div>
+    <div class="dl-card">
+      <div class="dl-head"><div class="dl-type t-jpg">JPG</div><div><div class="dl-title">最終確認比賽場地圖（JPG）</div><div class="dl-meta">屏東無人機競賽_最終確認比賽場地圖.jpg・595.3 KB</div></div></div>
+      <a class="dl-thumb" href="downloads/field-map.jpg" target="_blank" rel="noopener"><img src="downloads/field-map.jpg" alt="最終確認比賽場地圖（JPG）" loading="lazy"></a>
+      <p class="dl-note">主辦單位最終確認版場地圖。</p>
+      <div class="dl-actions"><a class="dl-btn main" href="downloads/field-map.jpg" download="屏東無人機競賽_最終確認比賽場地圖.jpg">⬇ 下載</a><a class="dl-btn" href="downloads/field-map.jpg" target="_blank" rel="noopener">線上看</a></div>
+    </div>
+    </div>
   </section>
 <!-- /guides:downloads -->
 

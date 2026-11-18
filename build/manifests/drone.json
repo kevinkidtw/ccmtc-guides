@@ -9,7 +9,8 @@
       "to": "drone-public.hex",
       "name": "屏東無人機競賽_公版.hex",
       "label": "公版程式（積木 .hex）",
-      "note": "拖進 makecode.microbit.org 即以積木開啟，擴展已內含。"
+      "note": "拖進 makecode.microbit.org 即以積木開啟，擴展已內含。比賽用的就是這一支。",
+      "primary": true
     },
     {
       "from": "02_公版程式/屏東無人機競賽_公版.ts",
