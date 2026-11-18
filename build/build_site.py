@@ -53,35 +53,26 @@ def human_size(n: int) -> str:
 # 頁面沒有定義時退回預設色，讓區塊單獨放進其他頁面也能用。
 DL_CSS = """
 <style>
-#downloads .dl-lead{margin:-4px 0 14px;color:var(--muted,#5a6577);font-size:14px}
-#downloads .dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-#downloads .dl-card{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line,#d8e0ea);border-radius:12px;
-  padding:16px;background:var(--card,#fff);box-shadow:0 1px 3px rgba(15,23,42,.04);transition:box-shadow .15s,transform .15s}
-#downloads .dl-card:hover{box-shadow:0 8px 20px rgba(15,23,42,.08);transform:translateY(-2px)}
-#downloads .dl-card.primary{grid-column:1/-1;border:2px solid var(--primary,#1e5eff);
-  background:linear-gradient(135deg,var(--primary-soft,#e8f0fe) 0%,var(--card,#fff) 70%)}
-#downloads .dl-head{display:flex;align-items:center;gap:12px}
-#downloads .dl-type{flex:0 0 auto;width:52px;height:52px;border-radius:10px;display:grid;place-items:center;
-  font:800 13px/1 ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.04em}
-#downloads .t-hex{background:var(--primary,#1e5eff);color:#fff}
-#downloads .t-ts{background:#ede9fe;color:#6d28d9}
-#downloads .t-pdf{background:var(--danger-soft,#fee4e2);color:var(--danger,#d92d20)}
-#downloads .t-jpg,#downloads .t-png{background:var(--ok-soft,#dcfce7);color:var(--ok,#15803d)}
-#downloads .t-other{background:#eef2f7;color:#334155}
-#downloads .dl-title{font-weight:800;font-size:16px;line-height:1.35}
-#downloads .dl-meta{font-size:12.5px;color:var(--muted,#5a6577);margin-top:2px}
-#downloads .dl-badge{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;
-  background:var(--accent,#e67e00);color:#fff;vertical-align:2px}
-#downloads .dl-note{margin:0;font-size:14px;color:var(--ink,#1a2230);flex:1}
-#downloads .dl-thumb{display:block;border-radius:8px;overflow:hidden;border:1px solid var(--line,#d8e0ea);aspect-ratio:16/9;background:#f1f5fb}
-#downloads .dl-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-#downloads .dl-actions{display:flex;flex-wrap:wrap;gap:8px}
-#downloads .dl-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-weight:700;font-size:14px;
-  text-decoration:none;border:1px solid var(--line,#d8e0ea);color:var(--ink,#1a2230);background:var(--card,#fff)}
+#downloads .dl-lead{margin:-4px 0 12px;color:var(--muted,#5a6577);font-size:14px}
+#downloads .dl-list{display:flex;flex-direction:column;gap:10px}
+#downloads .dl-card{display:flex;align-items:center;gap:14px;border:1px solid var(--line,#d8e0ea);border-radius:10px;
+  padding:12px 14px;background:var(--card,#fff)}
+#downloads .dl-card.primary{border-left:4px solid var(--primary,#1e5eff)}
+#downloads .dl-type{flex:0 0 auto;width:42px;height:42px;border-radius:8px;display:grid;place-items:center;
+  font:700 12px/1 ui-monospace,"SF Mono",Menlo,monospace;background:#eef2f7;color:#334155}
+#downloads .dl-body{flex:1;min-width:0}
+#downloads .dl-title{font-weight:700;font-size:15px;line-height:1.4}
+#downloads .dl-note{margin:2px 0 0;font-size:13.5px;color:var(--muted,#5a6577)}
+#downloads .dl-meta{font-size:12.5px;color:var(--muted,#5a6577)}
+#downloads .dl-actions{flex:0 0 auto;display:flex;gap:8px}
+#downloads .dl-btn{padding:6px 12px;border-radius:7px;font-weight:700;font-size:13.5px;text-decoration:none;white-space:nowrap;
+  border:1px solid var(--line,#d8e0ea);color:var(--ink,#1a2230);background:var(--card,#fff)}
 #downloads .dl-btn:hover{border-color:var(--primary,#1e5eff);color:var(--primary,#1e5eff)}
 #downloads .dl-btn.main{background:var(--primary,#1e5eff);border-color:var(--primary,#1e5eff);color:#fff}
-#downloads .dl-btn.main:hover{filter:brightness(1.08);color:#fff}
-@media (max-width:560px){#downloads .dl-grid{grid-template-columns:1fr}}
+@media (max-width:600px){
+  #downloads .dl-card{flex-wrap:wrap}
+  #downloads .dl-actions{width:100%;padding-left:56px}
+}
 </style>
 """
 
@@ -90,37 +81,30 @@ VIEWABLE = {".pdf", ".jpg", ".jpeg", ".png"}
 
 
 def downloads_section(items, out_dir: Path) -> str:
-    cards = []
+    rows = []
     for d in items:
         f = out_dir / "downloads" / d["to"]
         ext = f.suffix.lower()
         label = TYPE_LABEL.get(ext, ext.lstrip(".").upper()[:4] or "FILE")
-        tcls = "t-" + (label.lower() if label.lower() in ("hex", "ts", "pdf", "jpg", "png") else "other")
         href = f"downloads/{html.escape(d['to'])}"
         name = html.escape(d["name"])
         primary = bool(d.get("primary"))
-        badge = '<span class="dl-badge">先下載這個</span>' if primary else ""
-        thumb = (f'<a class="dl-thumb" href="{href}" target="_blank" rel="noopener">'
-                 f'<img src="{href}" alt="{html.escape(d["label"])}" loading="lazy"></a>') if ext in (".jpg", ".jpeg", ".png") else ""
-        actions = [f'<a class="dl-btn main" href="{href}" download="{name}">⬇ 下載</a>']
+        actions = [f'<a class="dl-btn main" href="{href}" download="{name}">下載</a>']
         if ext in VIEWABLE:
             actions.append(f'<a class="dl-btn" href="{href}" target="_blank" rel="noopener">線上看</a>')
-        cards.append(
-            f'    <div class="dl-card{" primary" if primary else ""}">\n'
-            f'      <div class="dl-head"><div class="dl-type {tcls}">{label}</div>'
-            f'<div><div class="dl-title">{html.escape(d["label"])}{badge}</div>'
-            f'<div class="dl-meta">{name}・{human_size(f.stat().st_size)}</div></div></div>\n'
-            f'      {thumb}\n'
-            f'      <p class="dl-note">{html.escape(d.get("note", ""))}</p>\n'
-            f'      <div class="dl-actions">{"".join(actions)}</div>\n'
-            f'    </div>'
+        rows.append(
+            f'    <div class="dl-card{" primary" if primary else ""}">'
+            f'<div class="dl-type">{label}</div>'
+            f'<div class="dl-body"><div class="dl-title">{html.escape(d["label"])}</div>'
+            f'<p class="dl-note">{html.escape(d.get("note", ""))}</p>'
+            f'<div class="dl-meta">{name}・{human_size(f.stat().st_size)}</div></div>'
+            f'<div class="dl-actions">{"".join(actions)}</div></div>'
         )
     return (
         f"{DL_START}\n" + DL_CSS +
         '  <section id="downloads">\n'
         "    <h2>檔案下載</h2>\n"
-        '    <p class="dl-lead">比賽程式、簡章與場地圖。手機點「下載」會存到檔案；「線上看」直接在瀏覽器開啟。</p>\n'
-        '    <div class="dl-grid">\n' + "\n".join(cards) + "\n    </div>\n  </section>\n"
+        '    <div class="dl-list">\n' + "\n".join(rows) + "\n    </div>\n  </section>\n"
         f"{DL_END}"
     )
 
