@@ -3,7 +3,7 @@
 //
 // 路線：出發區 → A → B → C → 終點區，每段 200 cm，每段結束都降落
 //   第1段穿過穿環一（圓心 70 cm）、第4段穿過穿環二（圓心 50 cm）
-// 操作：B 選起飛位置（S/A/B/C）、A 開始、A+B 緊急降落、摸 logo 看電壓
+// 操作：B 選起飛位置（S/A/B/C）、A 開始、A+B 緊急降落、摸 logo 看電壓（飛行中無效）
 
 let 左右修正 = 0
 
@@ -23,10 +23,6 @@ let 距離校正 = 100
 let 降落後等待時間 = 2000
 // 飛到哪裡結束：1=A、2=B、3=C、4=終點區
 let 結束位置 = 4
-// 高度到位的容許誤差（cm）
-let 高度誤差 = 8
-// 確認高度最多讀幾次
-let 高度確認次數 = 10
 // 動作之間的停頓（毫秒）
 let 穩定等待時間 = 800
 // 低於這個電壓不起飛（V）
@@ -80,16 +76,9 @@ function 往前飛 (飛行距離: number) {
     }
 }
 
-// 升降到指定高度，讀高度感測器確認到位
+// 升降到指定高度，停一下讓機身穩定
 function 升降到 (目標高度: number) {
     drone.setDroneHeight(目標高度)
-    let 次數 = 0
-    let 目前高度 = drone.droneHeight()
-    while (Math.abs(目前高度 - 目標高度) > 高度誤差 && 次數 < 高度確認次數 && !(緊急停止)) {
-        basic.pause(穩定等待時間)
-        目前高度 = drone.droneHeight()
-        次數 = 次數 + 1
-    }
     basic.pause(穩定等待時間)
 }
 
@@ -153,9 +142,12 @@ input.onButtonPressed(Button.AB, function () {
     basic.showIcon(IconNames.No)
 })
 
+// 飛行中不讀電壓，以免搶走無人機的回覆
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    basic.showNumber(drone.droneVoltage())
-    顯示位置(起飛位置)
+    if (!(飛行中)) {
+        basic.showNumber(drone.droneVoltage())
+        顯示位置(起飛位置)
+    }
 })
 
 顯示位置(起飛位置)
