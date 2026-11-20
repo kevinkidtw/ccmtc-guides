@@ -145,7 +145,7 @@
           <span><i style="background:#16a34a"></i>無人機飛行軌跡</span>
         </div>
         <div class="result" id="result"></div>
-        <div class="note blue">側視圖：橫軸是賽道長度、縱軸是高度（cm）。穿環一約在 140 cm、穿環二約在 760 cm。模擬器假設無人機每段都飛得剛好，實際落點要靠試飛調整。</div>
+        <div class="note blue">側視圖：橫軸是賽道長度、縱軸是高度（cm）。模擬器假設每次都飛得剛好，實際落點要靠試飛調整。</div>
       </div>
     </div>
   </section>
@@ -155,29 +155,43 @@
     <h2>二、比賽規則重點與飛行路線</h2>
     <div class="table-wrap"><table>
       <tr><th style="width:150px">項目</th><th>規則（簡章 8.1、8.5）</th><th style="width:210px">程式怎麼做</th></tr>
-      <tr><td>圓環降落</td><td>沿路徑方向依序降落在 A、B、C 圓環，分數看落點，取最佳。A：10/8/6/4/2；B：20/16/12/8/4；C：30/24/18/12/6</td><td>每一段飛完都<b>降落</b>，起飛倒數約 3 秒後再起飛</td></tr>
-      <tr><td>立式穿環</td><td>兩道高低不同的穿環，每道 10 分。穿環一在起飛區與 A 之間，穿環二在 C 與終點區之間</td><td>第 1 段飛 70 cm、第 4 段飛 50 cm，對準圓心</td></tr>
-      <tr><td>終點區</td><td>完整停在圖內 15 分</td><td>第 4 段結束降落在終點區中心</td></tr>
-      <tr><td>臨時停放區</td><td>每次無人機降落點都可視為臨時停放區；可重複解題，分數累進</td><td>摸 logo 選起飛位置，從失敗那關接著飛；按 B 可反覆刷「穿環一＋C」</td></tr>
-      <tr><td>名次比序</td><td>終點區 → C 圓環 → 穿環 → B 圓環 → A 圓環</td><td>C 環與終點區最重要，優先調準</td></tr>
+      <tr><td>圓環降落</td><td>沿路徑方向依序降落在 A、B、C 圓環，分數看落點，取最佳。A：10/8/6/4/2；B：20/16/12/8/4；C：30/24/18/12/6</td><td>按 A：每段飛完都降落</td></tr>
+      <tr><td>立式穿環</td><td>兩道高低不同的穿環，每道 10 分。穿環一在起飛區與 A 之間，穿環二在 C 與終點區之間</td><td>第 1 段飛 70 cm、第 4 段飛 50 cm</td></tr>
+      <tr><td>終點區</td><td>完整停在圖內 15 分</td><td>第 4 段降落在終點區中心</td></tr>
+      <tr><td>臨時停放區</td><td>每次降落點都可視為臨時停放區；可重複解題，分數累進</td><td>摸 logo 選起飛位置接著飛；按 B 反覆刷「穿環一＋C」</td></tr>
+      <tr><td>名次比序</td><td>終點區 → C 圓環 → 穿環 → B 圓環 → A 圓環</td><td>C 環與終點區優先調準</td></tr>
     </table></div>
 
-    <h3>每一段的動作順序</h3>
+    <h3>按 A：每一段的動作</h3>
     <div class="flow">
       <span>起飛（倒數 3-2-1-0）</span><em>→</em>
       <span>升到 120 cm</span><em>→</em>
-      <span>降到這段高度、停穩</span><em>→</em>
-      <span>往前 200 cm（一次飛完）</span><em>→</em>
-      <span>降落</span><em>→</em>
-      <span>LED 顯示到達位置</span>
+      <span>降到這段高度</span><em>→</em>
+      <span>往前 200 cm</span><em>→</em>
+      <span>降落，LED 顯示位置</span>
     </div>
     <div class="table-wrap" style="margin-top:12px"><table>
       <tr><th>段</th><th>從 → 到</th><th>飛行高度</th><th>途中障礙</th><th>降落得分</th></tr>
-      <tr><td>第 1 段</td><td>出發區 S → A</td><td>70 cm</td><td>穿環一（較高，圓心 70，可過 40～100），離起飛點約 90 cm</td><td>穿環 10 分＋A 環 2～10 分</td></tr>
+      <tr><td>第 1 段</td><td>出發區 S → A</td><td>70 cm</td><td>穿環一（圓心 70，可過 40～100），離起飛點約 90 cm</td><td>穿環 10 分＋A 環 2～10 分</td></tr>
       <tr><td>第 2 段</td><td>A → B</td><td>60 cm</td><td>—</td><td>B 環 4～20 分</td></tr>
       <tr><td>第 3 段</td><td>B → C</td><td>60 cm</td><td>—</td><td>C 環 6～30 分</td></tr>
-      <tr><td>第 4 段</td><td>C → 終點區 E</td><td>50 cm</td><td>穿環二（較低，圓心 50，可過 20～80）</td><td>穿環 10 分＋終點區 15 分</td></tr>
+      <tr><td>第 4 段</td><td>C → 終點區 E</td><td>50 cm</td><td>穿環二（圓心 50，可過 20～80）</td><td>穿環 10 分＋終點區 15 分</td></tr>
     </table></div>
+
+    <h3 id="rush">按 B：刷分（出發區 → 穿環一 → C）</h3>
+    <div class="flow">
+      <span>起飛（倒數 3-2-1-0）</span><em>→</em>
+      <span>升到 120 cm</span><em>→</em>
+      <span>降到「第1段高度」</span><em>→</em>
+      <span>往前 600 cm（每段距離 × 3），穿過穿環一</span><em>→</em>
+      <span>降落在 C</span>
+    </div>
+    <ol class="check">
+      <li>無人機放在<b>出發區中心</b>、機頭朝終點區，按 <b>B</b>（不受起飛位置影響）。</li>
+      <li>降落後 LED 顯示 <b>C</b>。拿回出發區，再按 B 刷下一次。</li>
+      <li>一次飛 600 cm 誤差較大，<b>先實測 C 的落點</b>再調 <code>距離校正</code>。</li>
+    </ol>
+    <div class="note">跳過 A、B 直接降落在 C 的計分方式，以簡章與裁判規定為準。</div>
   </section>
 
   <!-- 三、按鍵 -->
@@ -185,59 +199,29 @@
     <h2>三、按鍵與 LED 顯示對照</h2>
     <div class="table-wrap"><table>
       <tr><th style="width:150px">操作</th><th>功能</th><th>LED 顯示</th></tr>
-      <tr><td><b>按 B</b></td><td><b>刷分</b>：從出發區起飛，穿過穿環一後直接降落在 C（見下方說明）</td><td>起飛倒數 3、2、1、0；降落後顯示 C</td></tr>
-      <tr><td><b>按 A</b></td><td>開始任務：從起飛位置一段一段飛到結束位置</td><td>起飛倒數 3、2、1、0（飛行中一直顯示 0）；每次降落後顯示 A／B／C／E；完成顯示 ✔</td></tr>
-      <tr><td><b>按 A+B</b></td><td>緊急降落並停止任務。移動中按也有效，約 0.5 秒內送出降落指令，在當下的位置降落</td><td>✘</td></tr>
-      <tr><td>逾時降落</td><td>移動或調高度超過「逾時降落秒數」還沒完成（例如被風吹得一直無法到位），自動在原地降落並停止任務</td><td>✘</td></tr>
+      <tr><td><b>按 A</b></td><td>從起飛位置一段一段飛到結束位置</td><td>倒數 3、2、1、0（飛行中停在 0）；降落後顯示 A／B／C／E；完成顯示 ✔</td></tr>
+      <tr><td><b>按 B</b></td><td>刷分：出發區 → 穿環一 → 降落在 C</td><td>倒數 3、2、1、0；降落後顯示 C</td></tr>
+      <tr><td><b>按 A+B</b></td><td>在當下位置降落，停止任務（移動中也有效）</td><td>✘</td></tr>
       <tr><td><b>摸 logo</b>（V2）</td><td>切換起飛位置（飛行中無效）</td><td>S → A → B → C → S…</td></tr>
-      <tr><td><b>長按 logo</b>（V2）</td><td>顯示電池電壓（飛行中無效，以免干擾無人機的回覆）</td><td>捲動電壓數字</td></tr>
-      <tr><td>已落地卻停在 0</td><td>程式還在等無人機回覆，按鍵沒反應（見下方<a href="#resume">手動接續</a>）</td><td>0 不動</td></tr>
+      <tr><td><b>長按 logo</b>（V2）</td><td>顯示電池電壓（飛行中無效）</td><td>電壓數字</td></tr>
+      <tr><td>逾時降落</td><td>移動或調高度超過「逾時降落秒數」沒完成，自動在原地降落</td><td>✘</td></tr>
     </table></div>
-    <div class="note">從中途重飛：把無人機放回<b>最後成功降落的圓環中心</b>、機頭朝終點區，摸 logo 切到該位置（例如「B」），再按 A，就會接著飛 B → C → 終點。</div>
+    <div class="note">從中途接著飛：無人機放在<b>最後降落的圓環中心</b>、機頭朝終點區，摸 logo 切到該位置（例如「B」），按 A 就接著飛 B → C → 終點。</div>
 
-    <h3 id="rush">B 鍵刷分（出發區 → 穿環一 → C）</h3>
-    <div class="flow">
-      <span>起飛（倒數 3-2-1-0）</span><em>→</em>
-      <span>升到 120 cm</span><em>→</em>
-      <span>降到「第1段高度」</span><em>→</em>
-      <span>往前「每段距離 × 3」（600 cm）一次飛完，途中穿過穿環一</span><em>→</em>
-      <span>降落在 C</span>
-    </div>
+    <h3 id="resume">已落地但 LED 停在「0」：手動接續</h3>
+    <p>代表 micro:bit 沒收到無人機「動作完成」的回覆，程式停在等待中，按鍵沒有反應。</p>
     <ol class="check">
-      <li>無人機放在<b>出發區中心</b>、機頭朝終點區，按 <b>B</b>。不論 LED 顯示哪個起飛位置，刷分一律從出發區飛。</li>
-      <li>降落後 LED 顯示 <b>C</b>。把無人機拿回出發區，再按 B 刷下一次。</li>
-      <li>一次只起降一次，比按 A 依序降落 A、B、C 省下兩次起飛倒數與降落。</li>
-      <li>穿環高度用 <code>第1段高度</code>，飛行距離受 <code>距離校正</code>、<code>左右修正</code> 影響。距離是一次飛 600 cm，誤差會比 200 cm 大，<b>刷分前先實測 C 的落點</b>，再調 <code>距離校正</code>。</li>
+      <li>無人機還在空中就先按 <b>A+B</b>。</li>
+      <li>按 micro:bit <b>背面的重置鍵</b>，LED 回到 <b>S</b>。</li>
+      <li>長按 logo：顯示電壓代表連線正常；顯示 ✘ 再 0 代表連線有問題，把 micro:bit 插緊、檢查 P13／P14。</li>
+      <li>摸 logo 切到落地的位置 → 按 A 接著飛；刷分則把無人機拿回出發區按 B。</li>
     </ol>
-    <div class="note">跳過 A、B 直接降落在 C 的計分方式，以簡章與裁判規定為準。</div>
-
-    <h3 id="faster">縮短飛行時間</h3>
-    <div class="table-wrap"><table>
-      <tr><th style="width:200px">花時間的地方</th><th>能不能縮短</th></tr>
-      <tr><td>起飛倒數約 3 秒、先升到 120 cm</td><td>擴展與無人機內建，程式改不到</td></tr>
-      <tr><td>降落後等待</td><td><code>降落後等待時間</code> 預設已改為 0。起飛倒數本身就有約 3 秒，裁判看得到落點</td></tr>
-      <tr><td>降落速度</td><td>由無人機控制，程式改不到</td></tr>
-      <tr><td>動作之間的停頓</td><td><code>穩定等待時間</code> 從 800 改 500，每段約省 1 秒；改了之後若落點變得不穩就改回來</td></tr>
-      <tr><td>每次降落再起飛</td><td>刷分改用 <b>B 鍵</b>：一次飛到 C，只起降一次</td></tr>
-    </table></div>
-
-    <h3 id="resume">LED 停在「0」不動：手動接續</h3>
-    <p>起飛倒數到 0 之後，整段飛行 LED 都顯示 0，降落完成才換成位置字母。如果無人機<b>已經落地，LED 卻一直停在 0</b>，代表 micro:bit 沒收到無人機「動作完成」的回覆，程式停在等待中，按 A、按 B 都不會有反應。程式沒辦法自己跳過，請照下面步驟接續：</p>
-    <ol class="check">
-      <li>確認無人機已經停穩、螺旋槳停止。若還在空中，先按 <b>A+B</b>。</li>
-      <li>記下落在哪個位置（例如 B 環）。</li>
-      <li>按 micro:bit <b>背面的重置鍵</b>（或拔插電源），LED 回到 <b>S</b>。</li>
-      <li>長按 logo 看電壓：顯示數字代表連線正常；先出現 ✘ 再顯示 0 代表讀不到無人機，請把 micro:bit 插緊、檢查 P13／P14。電壓偏低就換電池。</li>
-      <li>無人機留在降落處（或依裁判指示擺放），機頭朝終點區。</li>
-      <li>摸 logo 切到剛才的位置（例如「B」）→ 按 A，接著飛下一段。</li>
-    </ol>
-    <div class="note red">重置後程式從頭開始，<b>起飛位置一定要重新摸 logo 選</b>，否則會從出發區那段重飛。比賽中能否觸碰 micro:bit 與無人機，依簡章與裁判規定。</div>
-    <div class="note blue">同一個地方一再卡住：換一顆滿電電池再試。換電池就正常是電力問題；換了還卡住是連線問題（micro:bit 沒插緊、接腳接觸不良）。</div>
+    <div class="note red">重置後<b>起飛位置要重新選</b>。比賽中能否觸碰 micro:bit 與無人機，依簡章與裁判規定。</div>
   </section>
 
   <!-- 四、參數 -->
   <section>
-    <h2>四、可調整參數速查表（積木最上方的「設定變數」）</h2>
+    <h2>四、可調整參數速查表（「當啟動時」積木裡的設定變數）</h2>
     <div class="param-viz">
       <svg class="field-svg" id="paramField" viewBox="-32 -165 952 215"></svg>
       <div class="param-hint" id="paramHint">👆 點下方表格中的任一個參數，圖上會用<b>橘色</b>標出它影響的段落或位置。</div>
@@ -245,19 +229,18 @@
     <div class="table-wrap"><table class="ptable">
       <colgroup><col style="width:17%"><col style="width:9%"><col style="width:37%"><col style="width:37%"></colgroup>
       <tr><th>參數名稱</th><th>預設值</th><th>用途</th><th>什麼時候調</th></tr>
-      <tr data-p="第1段高度"><td><code>第1段高度</code></td><td>70</td><td>出發區 → A，穿過第一道環（圓心 70）</td><td>撞到環的上緣就調低、下緣就調高</td></tr>
+      <tr data-p="第1段高度"><td><code>第1段高度</code></td><td>70</td><td>出發區 → A，穿過穿環一；刷分也用這個高度（cm）</td><td>撞環上緣調低、下緣調高</td></tr>
       <tr data-p="第2段高度"><td><code>第2段高度</code></td><td>60</td><td>A → B 的飛行高度（cm）</td><td>一般不用改</td></tr>
-      <tr data-p="第3段高度"><td><code>第3段高度</code></td><td>60</td><td>B → C 的飛行高度</td><td>一般不用改</td></tr>
-      <tr data-p="第4段高度"><td><code>第4段高度</code></td><td>50</td><td>C → 終點，穿過第二道環（圓心 50）</td><td>撞到環的上緣就調低、下緣就調高</td></tr>
-      <tr data-p="每段距離"><td><code>每段距離</code></td><td>200</td><td>每一段往前飛的距離（cm）</td><td>場地中心距若不是 200 才改</td></tr>
-      <tr data-p="距離校正"><td><code>距離校正</code></td><td>100</td><td>距離放大百分比</td><td>落點<b>還沒到</b>圓心 → 調大（105）；<b>超過</b> → 調小（95）</td></tr>
-      <tr data-p="左右修正"><td><code>左右修正</code></td><td>0</td><td>每段飛完往右（正）或往左（負）移幾 cm</td><td>每次都偏左 10 cm → 填 10；偏右 → 填 -10</td></tr>
-      <tr data-p="降落後等待時間"><td><code>降落後等待時間</code></td><td>0</td><td>降落後再多停多久才起飛（毫秒）。起飛倒數本身約 3 秒</td><td>裁判需要更多時間看落點才調大，例如 1000</td></tr>
-      <tr data-p="結束位置"><td><code>結束位置</code></td><td>4</td><td>4＝終點區、3＝C、2＝B、1＝A</td><td>練習時只飛前幾段，省電池</td></tr>
-      <tr data-p="穩定等待時間"><td><code>穩定等待時間</code></td><td>800</td><td>每個動作之間的停頓（毫秒）</td><td>動作接太快會晃 → 調大</td></tr>
-      <tr data-p="逾時降落秒數"><td><code>逾時降落秒數</code></td><td>20</td><td>移動或調高度超過幾秒沒完成就在原地降落，0＝不使用</td><td>比刷分「往前飛」實測秒數多 5 秒以上；半路就自動降落 → 調大</td></tr>
+      <tr data-p="第3段高度"><td><code>第3段高度</code></td><td>60</td><td>B → C 的飛行高度（cm）</td><td>一般不用改</td></tr>
+      <tr data-p="第4段高度"><td><code>第4段高度</code></td><td>50</td><td>C → 終點，穿過穿環二（cm）</td><td>撞環上緣調低、下緣調高</td></tr>
+      <tr data-p="每段距離"><td><code>每段距離</code></td><td>200</td><td>每段往前飛的距離（cm），刷分飛 3 倍</td><td>場地中心距不是 200 才改</td></tr>
+      <tr data-p="距離校正"><td><code>距離校正</code></td><td>100</td><td>距離放大百分比</td><td>落點不夠遠調大（105）、太遠調小（95）</td></tr>
+      <tr data-p="左右修正"><td><code>左右修正</code></td><td>0</td><td>飛完往右（正）或往左（負）移幾 cm</td><td>每次偏左 10 cm → 填 10</td></tr>
+      <tr data-p="結束位置"><td><code>結束位置</code></td><td>4</td><td>按 A 飛到哪裡停：4＝終點、3＝C、2＝B、1＝A</td><td>練習只飛前幾段</td></tr>
+      <tr data-p="穩定等待時間"><td><code>穩定等待時間</code></td><td>800</td><td>動作之間的停頓（毫秒）</td><td>會晃就調大；想快一點可試 500</td></tr>
+      <tr data-p="逾時降落秒數"><td><code>逾時降落秒數</code></td><td>20</td><td>移動或調高度超過幾秒沒完成就原地降落，0＝不使用</td><td>比刷分「往前飛」實測秒數多 5 秒以上</td></tr>
     </table></div>
-    <div class="note blue">「程式狀態」區的 <code>起飛位置</code>、<code>飛行中</code>、<code>緊急停止</code> 由程式自己管理，<b>不要改</b>。</div>
+    <div class="note blue">「程式狀態」區的變數由程式自己管理，<b>不要改</b>。起飛倒數、升到 120 cm、降落速度由擴展與無人機決定，程式改不到。</div>
   </section>
 
   <!-- 五、程式架構 -->
@@ -265,59 +248,52 @@
     <h2>五、程式架構（函式說明）</h2>
     <div class="table-wrap"><table>
       <tr><th style="width:150px">函式</th><th>做什麼</th></tr>
-      <tr><td><code>刷分</code></td><td>按 B 時執行：起飛 → 升降到（第1段高度）→ 往前飛（每段距離 × 3）→ 降落 → 顯示 C</td></tr>
-      <tr><td><code>執行任務</code></td><td>從「起飛位置＋1」那段開始，用迴圈一段一段呼叫「飛一段」直到「結束位置」</td></tr>
-      <tr><td><code>飛一段</code></td><td>起飛 → 升降到（這段高度）→ 往前飛（每段距離）→ 降落 → 顯示位置 → 等待（降落後等待時間）</td></tr>
-      <tr><td><code>升降到</code></td><td>設定這段高度（無人機到位後才會往下執行），再停「穩定等待時間」讓機身穩定</td></tr>
-      <tr><td><code>往前飛</code></td><td>把距離乘上「距離校正」後一次往前飛完，最後做「左右修正」</td></tr>
-      <tr><td><code>開始計時</code></td><td>移動或調高度前記下時間，給「逾時降落」使用</td></tr>
-      <tr><td>重複無限次（逾時降落）</td><td>在背景每 0.2 秒檢查一次：動作超過「逾時降落秒數」還沒完成，就送出降落指令並停止任務</td></tr>
-      <tr><td><code>段高度</code></td><td>輸入第幾段，回傳那一段的高度</td></tr>
+      <tr><td><code>執行任務</code></td><td>按 A：從「起飛位置＋1」那段開始，逐段呼叫「飛一段」到「結束位置」</td></tr>
+      <tr><td><code>飛一段</code></td><td>起飛 → 升降到 → 往前飛 → 降落 → 顯示位置</td></tr>
+      <tr><td><code>刷分</code></td><td>按 B：起飛 → 升降到（第1段高度）→ 往前飛（每段距離 × 3）→ 降落 → 顯示 C</td></tr>
+      <tr><td><code>升降到</code></td><td>設定高度，再停「穩定等待時間」</td></tr>
+      <tr><td><code>往前飛</code></td><td>距離乘上「距離校正」後一次飛完，再做「左右修正」</td></tr>
+      <tr><td><code>開始計時</code></td><td>移動或調高度前記下時間</td></tr>
+      <tr><td>重複無限次</td><td>逾時降落：動作超過「逾時降落秒數」沒完成就降落</td></tr>
+      <tr><td><code>段高度</code></td><td>回傳第幾段的高度</td></tr>
       <tr><td><code>顯示位置</code></td><td>0～4 對應 LED 顯示 S、A、B、C、E</td></tr>
     </table></div>
 
     <h3>開啟程式與擴展</h3>
     <ol class="check">
       <li>打開 <b>makecode.microbit.org</b>，把 <code>屏東無人機競賽_公版.hex</code> 拖進網頁，就會以積木開啟（擴展已內含）。</li>
-      <li>若學生從新專案自己拼：積木區點「<b>擴展</b>」→ 貼上下方網址搜尋 → 加入 Gigo Drone。</li>
+      <li>從新專案自己拼：點「<b>擴展</b>」→ 貼上下方網址 → 加入 Gigo Drone。</li>
     </ol>
     <div class="urlbox"><span id="url">https://github.com/gigotoys/GigoDrone</span><button id="copyUrl">複製</button></div>
   </section>
 
   <!-- 六、檢查清單 -->
   <section>
-    <h2>六、上場前檢查清單與現場修正速查</h2>
+    <h2>六、上場前檢查與現場修正</h2>
     <h3>上場前</h3>
     <ol class="check">
-      <li><b>多準備幾顆充飽的電池</b>：一顆約可飛 6～7 分鐘、充電要 1.5 小時，兩次比賽之間直接換電池。</li>
-      <li>使用大會提供的充飽電池；需要時可長按 logo 看電壓。</li>
-      <li>micro:bit 與無人機連線（P13／P14）接好；<b>沒接好時程式會一直等回覆而停住</b>。</li>
-      <li>看一下地墊：無人機靠拍攝地面來定位，<b>亮面反光或燈光直射的地面容易飄</b>，練習時間先觀察落點穩不穩。</li>
-      <li>確認場地淨高：每段都會先升到 120 cm，天花板建議 1.6 m 以上。</li>
-      <li>LED 顯示 <b>S</b>（出發區），無人機放在出發區中心、<b>機頭朝終點區</b>（電源燈在正後方）。</li>
-      <li>操作的人站在無人機<b>後方約 2 公尺</b>；A+B 緊急降落在移動中按也有效。</li>
-      <li>按 B 刷分實測一次，記下「往前飛」花幾秒；<code>逾時降落秒數</code> 要比它多 5 秒以上，否則會在半路自動降落。</li>
+      <li>使用大會提供的充飽電池。</li>
+      <li>micro:bit 與無人機（P13／P14）插緊。</li>
+      <li>地面反光或燈光直射容易飄，先試飛看落點穩不穩。</li>
+      <li>天花板建議 1.6 m 以上（起飛會先升到 120 cm）。</li>
+      <li>LED 顯示 <b>S</b>，無人機放在出發區中心、<b>機頭朝終點區</b>。</li>
+      <li>按 B 實測一次，記下往前飛的秒數，<code>逾時降落秒數</code> 至少多 5 秒。</li>
     </ol>
     <h3>現場修正速查</h3>
     <div class="table-wrap"><table>
-      <tr><th style="width:230px">看到的狀況</th><th>改哪個參數</th></tr>
-      <tr><td>每次都降在圓心<b>前面</b>（不夠遠）</td><td><code>距離校正</code> 調大，例如 100 → 105</td></tr>
-      <tr><td>每次都降在圓心<b>後面</b>（太遠）</td><td><code>距離校正</code> 調小，例如 100 → 95</td></tr>
-      <tr><td>每次都偏左 / 偏右</td><td><code>左右修正</code> 填正數往右、負數往左</td></tr>
-      <tr><td>撞到穿環上緣 / 下緣</td><td>該段高度調低 / 調高 5～10 cm</td></tr>
-      <tr><td>穿環時突然往上跳</td><td>該段高度調低 5～10 cm，讓上方多留空間</td></tr>
-      <tr><td>落點忽前忽後、不固定</td><td>先不要改參數，檢查地面是否反光、燈光是否直射；換電池再試</td></tr>
-      <tr><td>降落很慢、整趟太久</td><td>見<a href="#faster">縮短飛行時間</a>；刷分改按 B</td></tr>
-      <tr><td>刷分時 C 的落點不夠遠或太遠</td><td><code>距離校正</code> 調大或調小（一次飛 600 cm，1% 約 6 cm）</td></tr>
-      <tr><td>實際高度和設定不同（例如設 70、實際只有 62）</td><td>差多少補多少：<code>第1段高度</code> 改 78。在比賽場地旁貼高度刻度、用手機側拍校正</td></tr>
-      <tr><td>前進時晃動、落點不穩</td><td><code>穩定等待時間</code> 調大，讓起飛後先停穩再前進</td></tr>
-      <tr><td>B 之後失敗</td><td>放回 B 中心 → 摸 logo 選「B」→ 按 A 接著飛</td></tr>
-      <tr><td>有風，在降落點上方一直晃、不降落</td><td>抓它在圓環正上方時按 <b>A+B</b>，就在當下的位置降落；沒按的話，超過 <code>逾時降落秒數</code> 會自動降落。可把沒有穿環的段高度調低一點，離地面越近風越小</td></tr>
-      <tr><td>還沒到落點就自動降落（✘）</td><td><code>逾時降落秒數</code> 太短，調大</td></tr>
-      <tr><td>A+B 或逾時降落後，按 A、B 沒反應</td><td>程式還在等無人機回覆：重置 micro:bit → 摸 logo 選位置（刷分則把無人機拿回出發區）</td></tr>
-      <tr><td>已落地但 LED 一直顯示 0</td><td>不是參數問題：重置 micro:bit → 摸 logo 選落點位置 → 按 A（見<a href="#resume">手動接續</a>）</td></tr>
+      <tr><th style="width:230px">看到的狀況</th><th>怎麼做</th></tr>
+      <tr><td>降在圓心<b>前面</b>（不夠遠）</td><td><code>距離校正</code> 調大，例如 105</td></tr>
+      <tr><td>降在圓心<b>後面</b>（太遠）</td><td><code>距離校正</code> 調小，例如 95（刷分 1% 約 6 cm）</td></tr>
+      <tr><td>每次都偏左／偏右</td><td><code>左右修正</code> 正數往右、負數往左</td></tr>
+      <tr><td>撞到穿環上緣／下緣</td><td>該段高度調低／調高 5～10 cm</td></tr>
+      <tr><td>實際高度和設定不同</td><td>差多少補多少（設 70 實際 62 → 改 78），在場地旁貼刻度側拍校正</td></tr>
+      <tr><td>落點忽前忽後</td><td>先檢查地面反光、燈光；同設定多飛幾次再調</td></tr>
+      <tr><td>前進時晃動</td><td><code>穩定等待時間</code> 調大</td></tr>
+      <tr><td>有風，在落點上方一直晃</td><td>在圓環正上方時按 <b>A+B</b>；沒按會在逾時後自動降落。沒有穿環的段可飛低一點</td></tr>
+      <tr><td>還沒到落點就自動降落</td><td><code>逾時降落秒數</code> 調大</td></tr>
+      <tr><td>降落後按鍵沒反應、LED 停在 0</td><td>見<a href="#resume">手動接續</a></td></tr>
     </table></div>
-    <div class="note red">只在一次試飛看到偏差就改參數很容易越調越亂。同一個設定至少飛 2～3 次，看到<b>固定方向</b>的偏差再改。</div>
+    <div class="note red">同一個設定至少飛 2～3 次，看到<b>固定方向</b>的偏差再改。</div>
   </section>
 
   <!-- guides:downloads -->
@@ -348,7 +324,7 @@
     <h2>檔案下載</h2>
     <div class="dl-list">
     <div class="dl-card primary"><div class="dl-type">HEX</div><div class="dl-body"><div class="dl-title">公版程式（積木 .hex）</div><p class="dl-note">拖進 makecode.microbit.org 即以積木開啟，擴展已內含。比賽用的就是這一支。</p><div class="dl-meta">屏東無人機競賽_公版.hex・1.3 MB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.hex" download="屏東無人機競賽_公版.hex">下載</a></div></div>
-    <div class="dl-card"><div class="dl-type">TS</div><div class="dl-body"><div class="dl-title">公版程式（JavaScript 原始碼 .ts）</div><p class="dl-note">MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</p><div class="dl-meta">屏東無人機競賽_公版.ts・6.0 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">下載</a></div></div>
+    <div class="dl-card"><div class="dl-type">TS</div><div class="dl-body"><div class="dl-title">公版程式（JavaScript 原始碼 .ts）</div><p class="dl-note">MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</p><div class="dl-meta">屏東無人機競賽_公版.ts・5.8 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">下載</a></div></div>
     <div class="dl-card"><div class="dl-type">PDF</div><div class="dl-body"><div class="dl-title">活動簡章（PDF）</div><p class="dl-note">比賽規則以簡章為準。</p><div class="dl-meta">2026屏東縣無人機競賽活動簡章.pdf・415.3 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/brochure.pdf" download="2026屏東縣無人機競賽活動簡章.pdf">下載</a><a class="dl-btn" href="downloads/brochure.pdf" target="_blank" rel="noopener">線上看</a></div></div>
     <div class="dl-card"><div class="dl-type">JPG</div><div class="dl-body"><div class="dl-title">最終確認比賽場地圖（JPG）</div><p class="dl-note">主辦單位最終確認版場地圖。</p><div class="dl-meta">屏東無人機競賽_最終確認比賽場地圖.jpg・595.3 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/field-map.jpg" download="屏東無人機競賽_最終確認比賽場地圖.jpg">下載</a><a class="dl-btn" href="downloads/field-map.jpg" target="_blank" rel="noopener">線上看</a></div></div>
     </div>
@@ -589,7 +565,6 @@
     "每段距離": [() => { for (let n = 1; n <= 4; n++) arrow(n, "200 cm"); }, "影響<b>四段</b>每一段往前飛的距離（場地中心距 200 cm）。"],
     "距離校正": [() => { for (let n = 1; n <= 4; n++) arrow(n, "200 × 校正%"); [1,2,3,4].forEach(n => dot(C[n])); }, "影響<b>四段</b>的實際飛行距離，也就決定每次<b>降落點</b>是落在圓心前面還是後面。"],
     "左右修正": [() => { [1,2,3,4].forEach(n => dot(C[n], "左右移")); }, "每一段飛完、<b>降落前</b>往左或往右移動。側視圖看不出左右，橘點標出修正發生的位置。"],
-    "降落後等待時間": [() => { [1,2,3].forEach(n => dot(C[n], "降落後等待")); }, "在 <b>A、B、C</b> 降落後，再多停多久才起飛下一段（起飛倒數本身約 3 秒）。"],
     "結束位置": [() => { dot(C[4], "4"); dot(C[3], "3"); dot(C[2], "2"); dot(C[1], "1"); P("rect", { x: 800, y: -150, width: 100, height: 150, fill: OR, opacity: .1 }); }, "決定飛到哪裡停止：<b>1＝A、2＝B、3＝C、4＝終點區</b>（預設 4）。"],
     "穩定等待時間": [() => { for (let n = 1; n <= 4; n++) { vert(n); P("circle", { cx: C[n-1], cy: -H[n], r: 6, fill: OR }); } }, "<b>每個動作之間</b>的停頓，例如起飛後、到達高度後、前進後，影響所有段落。"],
     "逾時降落秒數": [() => { for (let n = 1; n <= 4; n++) { vert(n); arrow(n, "計時"); } }, "<b>調高度與往前飛</b>時計時，超過秒數還沒完成就在原地降落。刷分一次飛 600 cm 最久，秒數要以它為準。"]
