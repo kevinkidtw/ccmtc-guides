@@ -6,7 +6,7 @@
 // 操作：A 從起飛位置一段一段飛
 //       B 刷分：從出發區穿過穿環一，直接降落在 C
 //       摸 logo 選起飛位置（S/A/B/C）、長按 logo 看電壓（飛行中無效）
-//       A+B 緊急降落
+//       A+B 緊急降落；移動太久沒完成會自動降落（逾時降落）
 
 let 左右修正 = 0
 let 降落後等待時間 = 0
@@ -29,11 +29,16 @@ let 距離校正 = 100
 let 結束位置 = 4
 // 動作之間的停頓（毫秒）
 let 穩定等待時間 = 800
+// 移動或調高度超過幾秒沒完成就自動降落，0 = 不使用
+// 要比按 B 刷分「往前飛」實際花的秒數多 5 秒以上
+let 逾時降落秒數 = 20
 
 // ---------- 程式狀態（不用改） ----------
 let 起飛位置 = 0
 let 飛行中 = false
 let 緊急停止 = false
+let 計時中 = false
+let 動作開始時間 = 0
 
 // LED 顯示位置：S、A、B、C、E（終點）
 function 顯示位置 (位置: number) {
@@ -63,24 +68,38 @@ function 段高度 (第幾段: number) {
     }
 }
 
+// 逾時降落用：動作開始時記下時間
+function 開始計時 () {
+    動作開始時間 = input.runningTime()
+    計時中 = true
+}
+
 // 往前飛，含距離校正與左右修正
 function 往前飛 (飛行距離: number) {
     if (!(緊急停止)) {
+        開始計時()
         drone.moveAction(drone.DirectionOptions.Forward, Math.round(飛行距離 * 距離校正 / 100))
+        計時中 = false
         basic.pause(穩定等待時間)
     }
     if (左右修正 > 0 && !(緊急停止)) {
+        開始計時()
         drone.moveAction(drone.DirectionOptions.Right, 左右修正)
+        計時中 = false
         basic.pause(穩定等待時間)
     } else if (左右修正 < 0 && !(緊急停止)) {
+        開始計時()
         drone.moveAction(drone.DirectionOptions.Left, 0 - 左右修正)
+        計時中 = false
         basic.pause(穩定等待時間)
     }
 }
 
 // 升降到指定高度，停一下讓機身穩定
 function 升降到 (目標高度: number) {
+    開始計時()
     drone.setDroneHeight(目標高度)
+    計時中 = false
     basic.pause(穩定等待時間)
 }
 
@@ -147,6 +166,7 @@ input.onButtonPressed(Button.B, function () {
 
 input.onButtonPressed(Button.AB, function () {
     緊急停止 = true
+    計時中 = false
     drone.landingAction()
     basic.showIcon(IconNames.No)
 })
@@ -168,6 +188,19 @@ input.onLogoEvent(TouchButtonEvent.LongPressed, function () {
         basic.showNumber(drone.droneVoltage())
         顯示位置(起飛位置)
     }
+})
+
+// 逾時降落：移動或調高度太久沒完成（例如被風吹得一直無法到位），就在原地降落
+basic.forever(function () {
+    if (計時中 && 逾時降落秒數 > 0) {
+        if (input.runningTime() - 動作開始時間 > 逾時降落秒數 * 1000) {
+            計時中 = false
+            緊急停止 = true
+            drone.landingAction()
+            basic.showIcon(IconNames.No)
+        }
+    }
+    basic.pause(200)
 })
 
 顯示位置(起飛位置)

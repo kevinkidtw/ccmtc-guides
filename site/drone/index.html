@@ -187,7 +187,8 @@
       <tr><th style="width:150px">操作</th><th>功能</th><th>LED 顯示</th></tr>
       <tr><td><b>按 B</b></td><td><b>刷分</b>：從出發區起飛，穿過穿環一後直接降落在 C（見下方說明）</td><td>起飛倒數 3、2、1、0；降落後顯示 C</td></tr>
       <tr><td><b>按 A</b></td><td>開始任務：從起飛位置一段一段飛到結束位置</td><td>起飛倒數 3、2、1、0（飛行中一直顯示 0）；每次降落後顯示 A／B／C／E；完成顯示 ✔</td></tr>
-      <tr><td><b>按 A+B</b></td><td>緊急降落並停止任務</td><td>✘</td></tr>
+      <tr><td><b>按 A+B</b></td><td>緊急降落並停止任務。移動中按也有效，約 0.5 秒內送出降落指令，在當下的位置降落</td><td>✘</td></tr>
+      <tr><td>逾時降落</td><td>移動或調高度超過「逾時降落秒數」還沒完成（例如被風吹得一直無法到位），自動在原地降落並停止任務</td><td>✘</td></tr>
       <tr><td><b>摸 logo</b>（V2）</td><td>切換起飛位置（飛行中無效）</td><td>S → A → B → C → S…</td></tr>
       <tr><td><b>長按 logo</b>（V2）</td><td>顯示電池電壓（飛行中無效，以免干擾無人機的回覆）</td><td>捲動電壓數字</td></tr>
       <tr><td>已落地卻停在 0</td><td>程式還在等無人機回覆，按鍵沒反應（見下方<a href="#resume">手動接續</a>）</td><td>0 不動</td></tr>
@@ -254,6 +255,7 @@
       <tr data-p="降落後等待時間"><td><code>降落後等待時間</code></td><td>0</td><td>降落後再多停多久才起飛（毫秒）。起飛倒數本身約 3 秒</td><td>裁判需要更多時間看落點才調大，例如 1000</td></tr>
       <tr data-p="結束位置"><td><code>結束位置</code></td><td>4</td><td>4＝終點區、3＝C、2＝B、1＝A</td><td>練習時只飛前幾段，省電池</td></tr>
       <tr data-p="穩定等待時間"><td><code>穩定等待時間</code></td><td>800</td><td>每個動作之間的停頓（毫秒）</td><td>動作接太快會晃 → 調大</td></tr>
+      <tr data-p="逾時降落秒數"><td><code>逾時降落秒數</code></td><td>20</td><td>移動或調高度超過幾秒沒完成就在原地降落，0＝不使用</td><td>比刷分「往前飛」實測秒數多 5 秒以上；半路就自動降落 → 調大</td></tr>
     </table></div>
     <div class="note blue">「程式狀態」區的 <code>起飛位置</code>、<code>飛行中</code>、<code>緊急停止</code> 由程式自己管理，<b>不要改</b>。</div>
   </section>
@@ -268,6 +270,8 @@
       <tr><td><code>飛一段</code></td><td>起飛 → 升降到（這段高度）→ 往前飛（每段距離）→ 降落 → 顯示位置 → 等待（降落後等待時間）</td></tr>
       <tr><td><code>升降到</code></td><td>設定這段高度（無人機到位後才會往下執行），再停「穩定等待時間」讓機身穩定</td></tr>
       <tr><td><code>往前飛</code></td><td>把距離乘上「距離校正」後一次往前飛完，最後做「左右修正」</td></tr>
+      <tr><td><code>開始計時</code></td><td>移動或調高度前記下時間，給「逾時降落」使用</td></tr>
+      <tr><td>重複無限次（逾時降落）</td><td>在背景每 0.2 秒檢查一次：動作超過「逾時降落秒數」還沒完成，就送出降落指令並停止任務</td></tr>
       <tr><td><code>段高度</code></td><td>輸入第幾段，回傳那一段的高度</td></tr>
       <tr><td><code>顯示位置</code></td><td>0～4 對應 LED 顯示 S、A、B、C、E</td></tr>
     </table></div>
@@ -291,7 +295,8 @@
       <li>看一下地墊：無人機靠拍攝地面來定位，<b>亮面反光或燈光直射的地面容易飄</b>，練習時間先觀察落點穩不穩。</li>
       <li>確認場地淨高：每段都會先升到 120 cm，天花板建議 1.6 m 以上。</li>
       <li>LED 顯示 <b>S</b>（出發區），無人機放在出發區中心、<b>機頭朝終點區</b>（電源燈在正後方）。</li>
-      <li>操作的人站在無人機<b>後方約 2 公尺</b>；A+B 緊急降落要等目前的動作做完才會生效。</li>
+      <li>操作的人站在無人機<b>後方約 2 公尺</b>；A+B 緊急降落在移動中按也有效。</li>
+      <li>按 B 刷分實測一次，記下「往前飛」花幾秒；<code>逾時降落秒數</code> 要比它多 5 秒以上，否則會在半路自動降落。</li>
     </ol>
     <h3>現場修正速查</h3>
     <div class="table-wrap"><table>
@@ -307,6 +312,9 @@
       <tr><td>實際高度和設定不同（例如設 70、實際只有 62）</td><td>差多少補多少：<code>第1段高度</code> 改 78。在比賽場地旁貼高度刻度、用手機側拍校正</td></tr>
       <tr><td>前進時晃動、落點不穩</td><td><code>穩定等待時間</code> 調大，讓起飛後先停穩再前進</td></tr>
       <tr><td>B 之後失敗</td><td>放回 B 中心 → 摸 logo 選「B」→ 按 A 接著飛</td></tr>
+      <tr><td>有風，在降落點上方一直晃、不降落</td><td>抓它在圓環正上方時按 <b>A+B</b>，就在當下的位置降落；沒按的話，超過 <code>逾時降落秒數</code> 會自動降落。可把沒有穿環的段高度調低一點，離地面越近風越小</td></tr>
+      <tr><td>還沒到落點就自動降落（✘）</td><td><code>逾時降落秒數</code> 太短，調大</td></tr>
+      <tr><td>A+B 或逾時降落後，按 A、B 沒反應</td><td>程式還在等無人機回覆：重置 micro:bit → 摸 logo 選位置（刷分則把無人機拿回出發區）</td></tr>
       <tr><td>已落地但 LED 一直顯示 0</td><td>不是參數問題：重置 micro:bit → 摸 logo 選落點位置 → 按 A（見<a href="#resume">手動接續</a>）</td></tr>
     </table></div>
     <div class="note red">只在一次試飛看到偏差就改參數很容易越調越亂。同一個設定至少飛 2～3 次，看到<b>固定方向</b>的偏差再改。</div>
@@ -340,7 +348,7 @@
     <h2>檔案下載</h2>
     <div class="dl-list">
     <div class="dl-card primary"><div class="dl-type">HEX</div><div class="dl-body"><div class="dl-title">公版程式（積木 .hex）</div><p class="dl-note">拖進 makecode.microbit.org 即以積木開啟，擴展已內含。比賽用的就是這一支。</p><div class="dl-meta">屏東無人機競賽_公版.hex・1.3 MB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.hex" download="屏東無人機競賽_公版.hex">下載</a></div></div>
-    <div class="dl-card"><div class="dl-type">TS</div><div class="dl-body"><div class="dl-title">公版程式（JavaScript 原始碼 .ts）</div><p class="dl-note">MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</p><div class="dl-meta">屏東無人機競賽_公版.ts・4.9 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">下載</a></div></div>
+    <div class="dl-card"><div class="dl-type">TS</div><div class="dl-body"><div class="dl-title">公版程式（JavaScript 原始碼 .ts）</div><p class="dl-note">MakeCode 的 JavaScript 檢視原始碼，方便逐行閱讀或比對。</p><div class="dl-meta">屏東無人機競賽_公版.ts・6.0 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/drone-public.ts" download="屏東無人機競賽_公版.ts">下載</a></div></div>
     <div class="dl-card"><div class="dl-type">PDF</div><div class="dl-body"><div class="dl-title">活動簡章（PDF）</div><p class="dl-note">比賽規則以簡章為準。</p><div class="dl-meta">2026屏東縣無人機競賽活動簡章.pdf・415.3 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/brochure.pdf" download="2026屏東縣無人機競賽活動簡章.pdf">下載</a><a class="dl-btn" href="downloads/brochure.pdf" target="_blank" rel="noopener">線上看</a></div></div>
     <div class="dl-card"><div class="dl-type">JPG</div><div class="dl-body"><div class="dl-title">最終確認比賽場地圖（JPG）</div><p class="dl-note">主辦單位最終確認版場地圖。</p><div class="dl-meta">屏東無人機競賽_最終確認比賽場地圖.jpg・595.3 KB</div></div><div class="dl-actions"><a class="dl-btn main" href="downloads/field-map.jpg" download="屏東無人機競賽_最終確認比賽場地圖.jpg">下載</a><a class="dl-btn" href="downloads/field-map.jpg" target="_blank" rel="noopener">線上看</a></div></div>
     </div>
@@ -583,7 +591,8 @@
     "左右修正": [() => { [1,2,3,4].forEach(n => dot(C[n], "左右移")); }, "每一段飛完、<b>降落前</b>往左或往右移動。側視圖看不出左右，橘點標出修正發生的位置。"],
     "降落後等待時間": [() => { [1,2,3].forEach(n => dot(C[n], "降落後等待")); }, "在 <b>A、B、C</b> 降落後，再多停多久才起飛下一段（起飛倒數本身約 3 秒）。"],
     "結束位置": [() => { dot(C[4], "4"); dot(C[3], "3"); dot(C[2], "2"); dot(C[1], "1"); P("rect", { x: 800, y: -150, width: 100, height: 150, fill: OR, opacity: .1 }); }, "決定飛到哪裡停止：<b>1＝A、2＝B、3＝C、4＝終點區</b>（預設 4）。"],
-    "穩定等待時間": [() => { for (let n = 1; n <= 4; n++) { vert(n); P("circle", { cx: C[n-1], cy: -H[n], r: 6, fill: OR }); } }, "<b>每個動作之間</b>的停頓，例如起飛後、到達高度後、前進後，影響所有段落。"]
+    "穩定等待時間": [() => { for (let n = 1; n <= 4; n++) { vert(n); P("circle", { cx: C[n-1], cy: -H[n], r: 6, fill: OR }); } }, "<b>每個動作之間</b>的停頓，例如起飛後、到達高度後、前進後，影響所有段落。"],
+    "逾時降落秒數": [() => { for (let n = 1; n <= 4; n++) { vert(n); arrow(n, "計時"); } }, "<b>調高度與往前飛</b>時計時，超過秒數還沒完成就在原地降落。刷分一次飛 600 cm 最久，秒數要以它為準。"]
   };
   const hint = document.getElementById("paramHint");
   document.querySelectorAll("table.ptable tr[data-p]").forEach(tr => {
