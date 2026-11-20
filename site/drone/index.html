@@ -204,7 +204,7 @@
       <tr><td><b>按 A+B</b></td><td>在當下位置降落，停止任務（移動中也有效）</td><td>✘</td></tr>
       <tr><td><b>摸 logo</b>（V2）</td><td>切換起飛位置（飛行中無效）</td><td>S → A → B → C → S…</td></tr>
       <tr><td><b>長按 logo</b>（V2）</td><td>顯示電池電壓（飛行中無效）</td><td>電壓數字</td></tr>
-      <tr><td>逾時降落</td><td>移動或調高度超過「逾時降落秒數」沒完成，自動在原地降落</td><td>✘</td></tr>
+      <tr><td>逾時降落</td><td>往前飛超過設定秒數沒到位，自動在原地降落（按 A 用「逾時降落秒數」，按 B 用「刷分逾時降落秒數」）</td><td>✘</td></tr>
     </table></div>
     <div class="note">從中途接著飛：無人機放在<b>最後降落的圓環中心</b>、機頭朝終點區，摸 logo 切到該位置（例如「B」），按 A 就接著飛 B → C → 終點。</div>
 
@@ -238,7 +238,8 @@
       <tr data-p="左右修正"><td><code>左右修正</code></td><td>0</td><td>飛完往右（正）或往左（負）移幾 cm</td><td>每次偏左 10 cm → 填 10</td></tr>
       <tr data-p="結束位置"><td><code>結束位置</code></td><td>4</td><td>按 A 飛到哪裡停：4＝終點、3＝C、2＝B、1＝A</td><td>練習只飛前幾段</td></tr>
       <tr data-p="穩定等待時間"><td><code>穩定等待時間</code></td><td>800</td><td>動作之間的停頓（毫秒）</td><td>會晃就調大；想快一點可試 500</td></tr>
-      <tr data-p="逾時降落秒數"><td><code>逾時降落秒數</code></td><td>20</td><td>移動或調高度超過幾秒沒完成就原地降落，0＝不使用</td><td>比刷分「往前飛」實測秒數多 5 秒以上</td></tr>
+      <tr data-p="逾時降落秒數"><td><code>逾時降落秒數</code></td><td>8</td><td>按 A：每段往前飛超過幾秒沒到位就原地降落，0＝不使用</td><td>還沒到落點就自動降落 → 調大</td></tr>
+      <tr data-p="刷分逾時降落秒數"><td><code>刷分逾時降落秒數</code></td><td>20</td><td>按 B：往前飛 600 cm 超過幾秒沒到位就原地降落，0＝不使用</td><td>還沒到 C 就自動降落 → 調大</td></tr>
     </table></div>
     <div class="note blue">「程式狀態」區的變數由程式自己管理，<b>不要改</b>。起飛倒數、升到 120 cm、降落速度由擴展與無人機決定，程式改不到。</div>
   </section>
@@ -253,8 +254,7 @@
       <tr><td><code>刷分</code></td><td>按 B：起飛 → 升降到（第1段高度）→ 往前飛（每段距離 × 3）→ 降落 → 顯示 C</td></tr>
       <tr><td><code>升降到</code></td><td>設定高度，再停「穩定等待時間」</td></tr>
       <tr><td><code>往前飛</code></td><td>距離乘上「距離校正」後一次飛完，再做「左右修正」</td></tr>
-      <tr><td><code>開始計時</code></td><td>移動或調高度前記下時間</td></tr>
-      <tr><td>重複無限次</td><td>逾時降落：動作超過「逾時降落秒數」沒完成就降落</td></tr>
+      <tr><td>重複無限次</td><td>逾時降落：往前飛超過限時秒數沒到位就降落</td></tr>
       <tr><td><code>段高度</code></td><td>回傳第幾段的高度</td></tr>
       <tr><td><code>顯示位置</code></td><td>0～4 對應 LED 顯示 S、A、B、C、E</td></tr>
     </table></div>
@@ -277,7 +277,7 @@
       <li>地面反光或燈光直射容易飄，先試飛看落點穩不穩。</li>
       <li>天花板建議 1.6 m 以上（起飛會先升到 120 cm）。</li>
       <li>LED 顯示 <b>S</b>，無人機放在出發區中心、<b>機頭朝終點區</b>。</li>
-      <li>按 B 實測一次，記下往前飛的秒數，<code>逾時降落秒數</code> 至少多 5 秒。</li>
+      <li>按 B 實測一次，確認不會在半路自動降落；會的話調大 <code>刷分逾時降落秒數</code>。</li>
     </ol>
     <h3>現場修正速查</h3>
     <div class="table-wrap"><table>
@@ -290,7 +290,7 @@
       <tr><td>落點忽前忽後</td><td>先檢查地面反光、燈光；同設定多飛幾次再調</td></tr>
       <tr><td>前進時晃動</td><td><code>穩定等待時間</code> 調大</td></tr>
       <tr><td>有風，在落點上方一直晃</td><td>在圓環正上方時按 <b>A+B</b>；沒按會在逾時後自動降落。沒有穿環的段可飛低一點</td></tr>
-      <tr><td>還沒到落點就自動降落</td><td><code>逾時降落秒數</code> 調大</td></tr>
+      <tr><td>還沒到落點就自動降落</td><td>按 A：<code>逾時降落秒數</code> 調大；按 B：<code>刷分逾時降落秒數</code> 調大</td></tr>
       <tr><td>降落後按鍵沒反應、LED 停在 0</td><td>見<a href="#resume">手動接續</a></td></tr>
     </table></div>
     <div class="note red">同一個設定至少飛 2～3 次，看到<b>固定方向</b>的偏差再改。</div>
@@ -567,7 +567,8 @@
     "左右修正": [() => { [1,2,3,4].forEach(n => dot(C[n], "左右移")); }, "每一段飛完、<b>降落前</b>往左或往右移動。側視圖看不出左右，橘點標出修正發生的位置。"],
     "結束位置": [() => { dot(C[4], "4"); dot(C[3], "3"); dot(C[2], "2"); dot(C[1], "1"); P("rect", { x: 800, y: -150, width: 100, height: 150, fill: OR, opacity: .1 }); }, "決定飛到哪裡停止：<b>1＝A、2＝B、3＝C、4＝終點區</b>（預設 4）。"],
     "穩定等待時間": [() => { for (let n = 1; n <= 4; n++) { vert(n); P("circle", { cx: C[n-1], cy: -H[n], r: 6, fill: OR }); } }, "<b>每個動作之間</b>的停頓，例如起飛後、到達高度後、前進後，影響所有段落。"],
-    "逾時降落秒數": [() => { for (let n = 1; n <= 4; n++) { vert(n); arrow(n, "計時"); } }, "<b>調高度與往前飛</b>時計時，超過秒數還沒完成就在原地降落。刷分一次飛 600 cm 最久，秒數要以它為準。"]
+    "逾時降落秒數": [() => { for (let n = 1; n <= 4; n++) arrow(n, "計時"); }, "按 A 時，每段<b>往前飛</b>計時，超過秒數還沒到位就在原地降落。"],
+    "刷分逾時降落秒數": [() => { P("line", { x1: C[0] + 4, x2: C[3] - 4, y1: -138, y2: -138, stroke: OR, "stroke-width": 2.5 }); P("text", { x: (C[0] + C[3]) / 2, y: -143, "font-size": 11, "text-anchor": "middle", fill: "#c2410c", "font-weight": 700 }, "刷分 600 cm 計時"); dot(C[3], "C"); }, "按 B 刷分時，<b>往前飛 600 cm</b> 計時，超過秒數還沒到位就在原地降落。"]
   };
   const hint = document.getElementById("paramHint");
   document.querySelectorAll("table.ptable tr[data-p]").forEach(tr => {
