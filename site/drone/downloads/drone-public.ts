@@ -3,12 +3,16 @@
 //
 // 路線：出發區 → A → B → C → 終點區，每段 200 cm，每段結束都降落
 //   第1段穿過穿環一（圓心 70 cm）、第4段穿過穿環二（圓心 50 cm）
-// 操作：B 選起飛位置（S/A/B/C）、A 開始、A+B 緊急降落、摸 logo 看電壓（飛行中無效）
+// 操作：A 從起飛位置一段一段飛
+//       B 刷分：從出發區穿過穿環一，直接降落在 C
+//       摸 logo 選起飛位置（S/A/B/C）、長按 logo 看電壓（飛行中無效）
+//       A+B 緊急降落
 
 let 左右修正 = 0
+let 降落後等待時間 = 0
 
 // ---------- 可調整參數 ----------
-// 各段飛行高度（cm）
+// 各段飛行高度（cm），刷分時用第1段高度
 let 第1段高度 = 70
 let 第2段高度 = 60
 let 第3段高度 = 60
@@ -19,14 +23,12 @@ let 每段距離 = 200
 let 距離校正 = 100
 // 左右修正（cm）：正數往右、負數往左
 左右修正 = 0
-// 降落後停多久再起飛（毫秒）
-let 降落後等待時間 = 2000
-// 飛到哪裡結束：1=A、2=B、3=C、4=終點區
+// 降落後停多久再起飛（毫秒），起飛倒數本身約 3 秒
+降落後等待時間 = 0
+// 按 A 時飛到哪裡結束：1=A、2=B、3=C、4=終點區
 let 結束位置 = 4
 // 動作之間的停頓（毫秒）
 let 穩定等待時間 = 800
-// 低於這個電壓不起飛（V）
-let 最低電壓 = 3.6
 
 // ---------- 程式狀態（不用改） ----------
 let 起飛位置 = 0
@@ -97,14 +99,6 @@ function 飛一段 (第幾段: number) {
 
 // 從起飛位置一段一段飛到結束位置
 function 執行任務 () {
-    // 檢查電壓
-    let 電壓 = drone.droneVoltage()
-    if (電壓 < 最低電壓) {
-        basic.showIcon(IconNames.Sad)
-        basic.showNumber(電壓)
-        緊急停止 = true
-    }
-    // 依序飛每一段
     let 第幾段 = 起飛位置 + 1
     while (第幾段 <= 結束位置 && !(緊急停止)) {
         飛一段(第幾段)
@@ -114,6 +108,22 @@ function 執行任務 () {
         basic.showIcon(IconNames.No)
     } else {
         basic.showIcon(IconNames.Yes)
+    }
+}
+
+// 刷分：出發區起飛 → 第1段高度穿過穿環一 → 一次飛 3 段距離 → 降落在 C
+function 刷分 () {
+    drone.takeOffAction()
+    basic.pause(穩定等待時間)
+    if (!(緊急停止)) {
+        升降到(第1段高度)
+    }
+    往前飛(每段距離 * 3)
+    drone.landingAction()
+    if (緊急停止) {
+        basic.showIcon(IconNames.No)
+    } else {
+        顯示位置(3)
     }
 }
 
@@ -128,11 +138,10 @@ input.onButtonPressed(Button.A, function () {
 
 input.onButtonPressed(Button.B, function () {
     if (!(飛行中)) {
-        起飛位置 = 起飛位置 + 1
-        if (起飛位置 > 3) {
-            起飛位置 = 0
-        }
-        顯示位置(起飛位置)
+        飛行中 = true
+        緊急停止 = false
+        刷分()
+        飛行中 = false
     }
 })
 
@@ -142,8 +151,19 @@ input.onButtonPressed(Button.AB, function () {
     basic.showIcon(IconNames.No)
 })
 
-// 飛行中不讀電壓，以免搶走無人機的回覆
+// 摸 logo 選起飛位置（飛行中無效）
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    if (!(飛行中)) {
+        起飛位置 = 起飛位置 + 1
+        if (起飛位置 > 3) {
+            起飛位置 = 0
+        }
+        顯示位置(起飛位置)
+    }
+})
+
+// 長按 logo 看電壓；飛行中不讀，以免搶走無人機的回覆
+input.onLogoEvent(TouchButtonEvent.LongPressed, function () {
     if (!(飛行中)) {
         basic.showNumber(drone.droneVoltage())
         顯示位置(起飛位置)
