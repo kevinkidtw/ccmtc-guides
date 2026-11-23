@@ -11,6 +11,10 @@
 |---|---|---|---|
 | 屏東縣無人機競賽 公版程式說明站 | `/drone/` | 公開 | `build/manifests/drone.json` |
 | 2026 屏南區 STEAM AI 智創機器人競賽（封存） | `/competition/` | 公開、唯讀 | `build/manifests/competition.json`（type: mirror） |
+| 2026 屏東縣無人機競賽 屏南地區得獎榮譽榜 | `/drone-awards/` | 公開 | `build/manifests/drone-awards.json`（type: mirror，原始資料在 `build/drone-awards-src/`） |
+| 智創機器人程式說明站 | `/robot/` | 公開 | `../robot-guide/site`（type: mirror） |
+| 機關王 R4M 程式說明站 | `/r4m/` | 公開 | `../r4m-guide/site`（type: mirror） |
+| 魷來魷去 AI 教材站 | `/squid/` | 公開 | `../squid-portal/site`（type: mirror） |
 
 ## 架構
 
@@ -88,11 +92,16 @@ docker compose up -d     # http://localhost:3100/drone/
 
 之後執行 `./deploy_nas.sh`；它會先確認 compose 已有 `guides` 服務，再同步、重啟並做線上驗證。
 
-## 後續遷移
+## 舊獨立容器併入（2026-11-23 完成）
 
-`/robot`、`/r4m`、`/squid` 目前仍是各自的容器。遷移方式：把各自 `site/` 放進 `site/<key>/`、
-`sites.mjs` 的 `upstream` 改成 `'guides'`，cookie 與 signMessage 維持不變（使用者不必重新登入），
-驗證後移除舊容器。
+`/robot`、`/r4m`、`/squid` 原本各自一個 nginx 容器（`robot-guide`、`r4m-guide`、`squid-portal`），
+已併入本容器，NAS 上的舊容器已移除、compose 也拿掉對應服務。網址、cookie 都不變。
+
+- 內容仍在各自專案維護：改完先在 `../robot-guide` 等專案建置出 `site/`，再執行本專案 `./deploy_nas.sh`。
+  各專案自己的 `deploy_nas.sh` 已不再使用。
+- manifest 是 `type: mirror`、`source` 指向 `../<專案>/site`，建置時原樣複製，不注入返回列。
+- `site/robot`、`site/r4m`、`site/squid` 是建置產物，不進版控（squid 含主辦單位教材，原 repo 為私人）。
+- `.pptx` 以附件下載（沿用 squid 舊容器行為），已加進 `nginx.conf`。
 
 ## 封存鏡像（type: mirror）
 

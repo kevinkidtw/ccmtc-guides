@@ -1,0 +1,7 @@
+{
+  "key": "r4m",
+  "type": "mirror",
+  "title": "機關王 R4M 程式說明站",
+  "source": "../r4m-guide/site",
+  "note": "2026-11-23 由獨立容器 r4m-guide 併入 guides。內容仍在 ../r4m-guide 維護（改完先在該專案建置 site/），再執行本專案 deploy_nas.sh。"
+}

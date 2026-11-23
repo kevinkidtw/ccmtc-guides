@@ -1,0 +1,7 @@
+{
+  "key": "squid",
+  "type": "mirror",
+  "title": "魷來魷去 AI 教材站",
+  "source": "../squid-portal/site",
+  "note": "2026-11-23 由獨立容器 squid-portal 併入 guides。內容仍在 ../squid-portal 維護（改完先在該專案建置 site/），再執行本專案 deploy_nas.sh。"
+}
