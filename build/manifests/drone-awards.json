@@ -1,0 +1,7 @@
+{
+  "key": "drone-awards",
+  "type": "mirror",
+  "title": "2026 屏東縣無人機競賽 屏南地區得獎榮譽榜",
+  "source": "archives/drone-awards",
+  "note": "2026-11-23 由 build/drone-awards-src 產生（template.html + data.json → index.html；posters.py → 海報 PNG）。改名單請改 data.json 後重新產生。"
+}
