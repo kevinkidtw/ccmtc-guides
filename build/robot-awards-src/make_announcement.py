@@ -1,7 +1,7 @@
 """由 data.json 產生最新消息公告用的 HTML（announcement.html）。
 
 公告內文以 white-space: pre-wrap 顯示，所以表格必須寫在同一行，區塊之間才用換行。
-只列屏南地區（屏東縣）隊伍，其他縣市不列；名單不放選手與指導教師姓名。完整公告版 PDF 另以附件提供。
+只列屏南地區（屏東縣）隊伍，其他縣市不列；名單不放選手與指導教師姓名；公告不附 PDF。
 """
 import json, re
 from collections import Counter, OrderedDict
@@ -57,8 +57,6 @@ def main():
     out.append(f'<b>🎖️ 佳作（{len(merits)} 隊）</b>')
     out.append(table(['賽事・組別', '隊伍', '學校'], [
         {'cells': [f'{EVENT[r["e"]]}<br>{GROUP[r["g"]]}', r['t'], short(r['s'])]} for r in merits]))
-    out.append('')
-    out.append('📎 各組完整得獎名單請見下方附件（主辦單位公告版 PDF）。')
     open('announcement.html', 'w', encoding='utf-8').write('\n'.join(out))
 
 
